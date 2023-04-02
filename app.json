@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "ReactTides",
-    "slug": "ReactTides",
+    "name": "Herron Island",
+    "slug": "herron-island",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./AppStore.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.joshdlee.herronisland"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "07649e8b-d92a-4275-af26-3d01a10b2dc0"
+      }
+    },
+    "owner": "joshdlee"
   }
 }
