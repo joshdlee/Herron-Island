@@ -2,29 +2,32 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Platform, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, Platform, useColorScheme, Appearance, StatusBar } from 'react-native';
 import { Provider as PaperProvider, Button } from 'react-native-paper';
 import TideChart from './TideChart';
 import { lightTheme, darkTheme } from './theme';
 import FerryTab from './FerryTab';
 import Weather from './Weather';
+import HerronIsland from './HerronIsland';
+import { useState } from 'react';
 
 const Tab = createMaterialBottomTabNavigator();
 
-function MyTabs({ theme }) {
+function MyTabs({ theme, navigation }) {
   return (
     <Tab.Navigator
       initialRouteName="Ferry"
       activeColor={theme.colors.accent}
       inactiveColor={theme.colors.onSurfaceVariant}
-      barStyle={{ backgroundColor: theme.colors.surfaceVariant,
+      barStyle={{
+        backgroundColor: theme.colors.surfaceVariant,
         borderTopColor: theme.colors.outline,
         borderTopWidth: 1,
-       }}
+      }}
     >
       <Tab.Screen
         name="FerrySchedule"
-        component={ FerryTab }
+        component={FerryTab}
         options={{
           tabBarLabel: 'Ferry',
           tabBarIcon: ({ color }) => (
@@ -34,7 +37,7 @@ function MyTabs({ theme }) {
       />
       <Tab.Screen
         name="TideChart"
-        component={ TideChart }
+        component={TideChart}
         options={{
           tabBarLabel: 'Tides',
           tabBarIcon: ({ color }) => (
@@ -44,7 +47,7 @@ function MyTabs({ theme }) {
       />
       <Tab.Screen
         name="Weather"
-        component={ Weather }
+        component={Weather}
         options={{
           tabBarLabel: 'Weather',
           tabBarIcon: ({ color }) => (
@@ -52,41 +55,63 @@ function MyTabs({ theme }) {
           ),
         }}
       />
+      <Tab.Screen
+        name="HerronIsland"
+        component={HerronIsland}
+        options={{
+          tabBarLabel: 'Herron Island',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="island" color={color} size={26} />
+          ),
+          tabBarButton: () => null,
+        }}
+      />
     </Tab.Navigator>
   );
 }
 
-export default function App() {
-  const [isDarkMode, setIsDarkMode] = React.useState(true);
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const theme = isDarkMode ? darkTheme : lightTheme;
-
-  return (
-    <PaperProvider theme={theme}>
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.headerWrapper}>
-          <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
-            <Text style={[styles.title, { color: theme.colors.onSurface }]}>Herron Island</Text>
-            <Button 
-              mode="contained" 
-              onPress={toggleTheme} 
-              labelStyle={{ color: theme.colors.onPrimary }}
-              icon={isDarkMode ? "weather-sunny" : "weather-night"}>
-              {isDarkMode ? 'Light' : 'Dark'}
-            </Button>
+  export default function App(navigation) {
+    const colorScheme = useColorScheme();
+    const [userTheme, setUserTheme] = useState(null);
+  
+    const toggleTheme = () => {
+      setUserTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+    };
+  
+    const theme = userTheme
+      ? userTheme === 'dark'
+        ? darkTheme
+        : lightTheme
+      : colorScheme === 'dark'
+      ? darkTheme
+      : lightTheme;
+  
+    return (
+      <PaperProvider theme={theme}>
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+          <View style={styles.headerWrapper}>
+            <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
+              <Text style={[styles.title, { color: theme.colors.onSurface }]}>Herron Island</Text>
+              <Button
+                onPress={toggleTheme}
+                style={{ justifyContent: 'center' }}
+              >
+                <MaterialCommunityIcons
+                  name={theme === darkTheme ? 'weather-night' : 'weather-sunny'}
+                  color={theme.colors.onSurface}
+                  size={20}
+                />
+              </Button>
+            </View>
           </View>
+          <NavigationContainer>
+            <MyTabs theme={theme} />
+          </NavigationContainer>
         </View>
-        <NavigationContainer>
-          <MyTabs theme={theme} />
-        </NavigationContainer>
-      </View>
-    </PaperProvider>
-  );
-}
+      </PaperProvider>
+    );
+  }
 
 const styles = StyleSheet.create({
   container: {
@@ -94,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   headerWrapper: {
-    paddingTop: Platform.OS === 'ios' ? 40 : 0, // Add the padding for iOS devices
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight,
   },
   header: {
     flexDirection: 'row',
@@ -103,6 +128,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 16,
+    // marginTop: Platform.OS === 'ios' ? 16 : 0,
     marginTop: Platform.OS === 'ios' ? 16 : 0,
   },
   title: {
@@ -110,4 +136,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-   

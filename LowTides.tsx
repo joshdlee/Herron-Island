@@ -21,14 +21,26 @@ const LowTides = () => {
         </View>
         <View style={styles(theme).scheduleHeader}>
           <View style={styles(theme).column}>
-            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Mainland</Text>
+            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Island</Text>
           </View>
           <View style={styles(theme).column}>
-            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Island</Text>
+            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Mainland</Text>
           </View>
         </View>
         {Object.keys(lowTides.low_tides).map((date) => {
           const schedule = lowTides.low_tides[date];
+          const islandCancelTableData = schedule.cancel.island?.departure_times?.map((time) => [
+            <View style={styles(theme).cellContent}>
+            <Text style={styles(theme).timeText}>{time} <MaterialCommunityIcons name="cancel" size={14} color={theme.colors.primary} />
+            </Text>
+            </View>,
+          ]) ?? [];
+          const islandRescheduleTableData = schedule.reschedule.island?.departure_times?.map((time) => [
+            <View style={styles(theme).cellContent}>
+            <Text style={styles(theme).timeText}>{time} <MaterialCommunityIcons name="plus" size={18} color={theme.colors.secondary} />
+            </Text>
+            </View>,
+          ]) ?? [];
           const mainlandCancelTableData = schedule.cancel.mainland?.departure_times?.map((time) => [
             <View style={styles(theme).cellContent}>
             <Text style={styles(theme).timeText}>{time} <MaterialCommunityIcons name="cancel" size={14} color={theme.colors.primary} /></Text>
@@ -40,23 +52,31 @@ const LowTides = () => {
 </Text>
             </View>,
           ]) ?? [];
-          const islandCancelTableData = schedule.cancel.island?.departure_times?.map((time) => [
-            <View style={styles(theme).cellContent}>
-            <Text style={styles(theme).timeText}>{time} <MaterialCommunityIcons name="cancel" size={14} color={theme.colors.primary} />
-</Text>
-            </View>,
-          ]) ?? [];
-          const islandRescheduleTableData = schedule.reschedule.island?.departure_times?.map((time) => [
-            <View style={styles(theme).cellContent}>
-            <Text style={styles(theme).timeText}>{time} <MaterialCommunityIcons name="plus" size={18} color={theme.colors.secondary} />
-</Text>
-            </View>,
-          ]) ?? [];
 
           return (
             <View key={date} style={styles(theme).dayContainer}>
               <Text style={[styles(theme).dayHeading, { color: theme.colors.onBackground }]}>{date}</Text>
               <View style={styles(theme).schedule}>
+              <View style={styles(theme).column}>
+                        <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
+                          {islandCancelTableData.map((rowData, index) => (
+                            <Row
+                              key={index}
+                              data={rowData}
+                              style={[styles(theme).row, { backgroundColor: theme.colors.surface }]}
+                              textStyle={{ ...styles(theme).rowText, color: theme.colors.onSurface }}
+                            />
+                          ))}
+                          {islandRescheduleTableData.map((rowData, index) => (
+                            <Row
+                              key={index}
+                              data={rowData}
+                              style={[styles(theme).row, { backgroundColor: theme.colors.surface }]}
+                              textStyle={{ ...styles(theme).rowText, color: theme.colors.onSurface }}
+                            />
+                          ))}
+                        </Table>
+                        </View>
                 <View style={styles(theme).column}>
                   <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
                     {mainlandCancelTableData.map((rowData, index) => (
@@ -77,35 +97,14 @@ const LowTides = () => {
                         ))}
                         </Table>
                         </View>
-                        <View style={styles(theme).column}>
-
-<Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
-  {islandCancelTableData.map((rowData, index) => (
-    <Row
-      key={index}
-      data={rowData}
-      style={[styles(theme).row, { backgroundColor: theme.colors.surface }]}
-      textStyle={{ ...styles(theme).rowText, color: theme.colors.onSurface }}
-    />
-  ))}
-  {islandRescheduleTableData.map((rowData, index) => (
-    <Row
-      key={index}
-      data={rowData}
-      style={[styles(theme).row, { backgroundColor: theme.colors.surface }]}
-      textStyle={{ ...styles(theme).rowText, color: theme.colors.onSurface }}
-    />
-  ))}
-</Table>
-</View>
-</View>
-</View>
-);
-})}
-</View>
-</ScrollView>
-);
-};
+                        </View>
+                        </View>
+                        );
+                        })}
+                        </View>
+                        </ScrollView>
+                        );
+                        };
 const styles = (theme) => {
 const screenWidth = Dimensions.get('window').width;
 const dynamicWidth = screenWidth * 0.45;

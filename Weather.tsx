@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { API_KEY } from '@env';
+// import { API_KEY } from '@env';
+
+const API_KEY = '941a855f2988bdb2cef42cfa9e3669d3'
 
 const LATITUDE = '47.2644';
 const LONGITUDE = '-122.8343';
@@ -13,16 +16,20 @@ const Weather = () => {
   const [alerts, setAlerts] = useState([]);
 
 
-  useEffect(() => {
-    fetch(API_URL)
-      .then(response => response.json())
-      .then(data => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchWeatherData = async () => {
+        const response = await fetch(API_URL);
+        const data = await response.json();
         setWeatherData(data);
         if (data.alerts) {
           setAlerts(data.alerts);
         }
-      });
-  }, []);
+      };
+      
+      fetchWeatherData();
+    }, [])
+  );
 
   if (!weatherData) {
     return (

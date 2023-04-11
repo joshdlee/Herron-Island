@@ -35,10 +35,10 @@ const SummerFerrySchedule = () => {
         <Text style={[styles(theme).heading, { color: theme.colors.onBackground }]}>Summer</Text>
         <View style={styles(theme).scheduleHeader}>
           <View style={styles(theme).column}>
-            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Mainland</Text>
+            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Island</Text>
           </View>
           <View style={styles(theme).column}>
-            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Island</Text>
+            <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Mainland</Text>
           </View>
         </View>
         {Object.keys(weeklySchedule).map((day) => {
@@ -52,7 +52,7 @@ const SummerFerrySchedule = () => {
               <View style={styles(theme).schedule}>
                 <View style={styles(theme).column}>
                   <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
-                    {mainlandTableData.map((rowData, index) => (
+                    {islandTableData.map((rowData, index) => (
                       <Row
                         key={index}
                         data={rowData}
@@ -64,7 +64,7 @@ const SummerFerrySchedule = () => {
                 </View>
                 <View style={styles(theme).column}>
                   <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
-                    {islandTableData.map((rowData, index) => (
+                    {mainlandTableData.map((rowData, index) => (
                       <Row
                         key={index}
                         data={rowData}

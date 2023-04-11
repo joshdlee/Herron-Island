@@ -17,10 +17,10 @@ const HolidaySchedule = () => {
       <Text style={[styles(theme).heading, { color: theme.colors.onBackground }]}>Holiday Schedule</Text>
       <View style={styles(theme).scheduleHeader}>
         <View style={[styles(theme).column, { alignItems: 'center' }]}>
-          <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground, textAlign: 'center' }]}>Mainland</Text>
+          <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground, textAlign: 'center' }]}>Island</Text>
         </View>
         <View style={[styles(theme).column, { alignItems: 'center' }]}>
-          <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground, textAlign: 'center' }]}>Island</Text>
+          <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground, textAlign: 'center' }]}>Mainland</Text>
         </View>
       </View>
       <View style={styles(theme).schedule}>
@@ -43,8 +43,8 @@ const HolidaySchedule = () => {
               <View key={index} style={styles(theme).dayContainer}>
                 <Text style={[styles(theme).heading2, { color: theme.colors.onSurface }]}>{holidayWithDate}</Text>
                 <View style={styles(theme).tableContainer}>
-                  <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
-                    {mainlandDepartureTimes.map((time, index) => {
+                <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
+                    {islandDepartureTimes.map((time, index) => {
                       return (
                       <Row
                         key={index}
@@ -58,9 +58,8 @@ const HolidaySchedule = () => {
                   </Table>
                   <Text>
                   <View style={{ width: 20 }} /> {/* gap between column */}
-                  </Text>
                   <Table borderStyle={{ borderWidth: 1, borderColor: theme.colors.outline }}>
-                    {islandDepartureTimes.map((time, index) => {
+                    {mainlandDepartureTimes.map((time, index) => {
                       return (
                       <Row
                         key={index}
@@ -72,6 +71,7 @@ const HolidaySchedule = () => {
                       );
                     })}
                   </Table>
+                  </Text>
                 </View>
               </View>
             );
