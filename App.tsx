@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Platform, useColorScheme, Appearance, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Platform, useColorScheme, Appearance, StatusBar, Image } from 'react-native';
 import { Provider as PaperProvider, Button } from 'react-native-paper';
 import TideChart from './TideChart';
 import { lightTheme, darkTheme } from './theme';
@@ -71,32 +71,36 @@ function MyTabs({ theme, navigation }) {
 }
 
 
-  export default function App(navigation) {
-    const colorScheme = useColorScheme();
-    const [userTheme, setUserTheme] = useState(null);
-  
-    const toggleTheme = () => {
-      setUserTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
-    };
-  
-    const theme = userTheme
-      ? userTheme === 'dark'
-        ? darkTheme
-        : lightTheme
-      : colorScheme === 'dark'
+export default function App(navigation) {
+  const colorScheme = useColorScheme();
+  const [userTheme, setUserTheme] = useState(null);
+
+  const toggleTheme = () => {
+    setUserTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
+
+  const theme = userTheme
+    ? userTheme === 'dark'
       ? darkTheme
-      : lightTheme;
-  
-    return (
-      <PaperProvider theme={theme}>
-        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-          <View style={styles.headerWrapper}>
-            <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
-              <Text style={[styles.title, { color: theme.colors.onSurface }]}>Herron Island</Text>
-              <Button
-                onPress={toggleTheme}
-                style={{ justifyContent: 'center' }}
-              >
+      : lightTheme
+    : colorScheme === 'dark'
+    ? darkTheme
+    : lightTheme;
+
+  return (
+    <PaperProvider theme={theme}>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <View style={styles.headerWrapper}>
+          <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
+            <View style={{ flex: 1 }} />
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Image
+                source={require('./assets/Herron-Island-Teal.png')}
+                style={{ resizeMode: 'contain', height: 40 }}
+              />
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Button onPress={toggleTheme} style={{ justifyContent: 'center' }}>
                 <MaterialCommunityIcons
                   name={theme === darkTheme ? 'weather-night' : 'weather-sunny'}
                   color={theme.colors.onSurface}
@@ -105,13 +109,15 @@ function MyTabs({ theme, navigation }) {
               </Button>
             </View>
           </View>
-          <NavigationContainer>
-            <MyTabs theme={theme} />
-          </NavigationContainer>
         </View>
-      </PaperProvider>
-    );
-  }
+        <NavigationContainer>
+          <MyTabs theme={theme} />
+        </NavigationContainer>
+      </View>
+    </PaperProvider>
+  );
+}
+
 
 const styles = StyleSheet.create({
   container: {

@@ -3,7 +3,7 @@
     "userInterfaceStyle": "light",
     "name": "Herron Island",
     "slug": "herron-island",
-    "version": "1.0.14",
+    "version": "1.0.18",
     "orientation": "portrait",
     "icon": "./AppStore.png",
     "splash": {
