@@ -120,11 +120,29 @@ container: {
 flex: 1,
 backgroundColor: theme.colors.background,
 overflow: 'hidden',
+color: theme.colors.onSurface,
+shadowColor: theme.colors.secondary,
+shadowOffset: {
+  width: 0,
+  height: 2,
+},
+shadowOpacity: 0.25,
+shadowRadius: 3.84,
+elevation: 5,
 },
 row: {
 flexDirection: 'row',
 borderBottomWidth: 1,
-borderColor: theme.colors.secondary,
+borderColor: theme.colors.primary,
+color: theme.colors.onSurface,
+shadowColor: theme.colors.secondary,
+shadowOffset: {
+  width: 0,
+  height: 2,
+},
+shadowOpacity: 0.25,
+shadowRadius: 3.84,
+elevation: 5,
 },
 header: {
 backgroundColor: theme.colors.surface,
@@ -134,6 +152,15 @@ fontWeight: 'extra-bold'
 cell: {
 padding: 8,
 flex: 1,
+      // color: theme.colors.onSurface,
+      // shadowColor: theme.colors.primary,
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 2,
+      // },
+      // shadowOpacity: 0.25,
+      // shadowRadius: 3.84,
+      // elevation: 5,
 },
 text: {
 fontSize: 16,

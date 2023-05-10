@@ -138,6 +138,15 @@ column: {
   flex: 1,
   marginHorizontal: 10,
   textAlign: 'center',
+  color: theme.colors.onSurface,
+  shadowColor: theme.colors.primary,
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
 },
 subHeading: {
   fontSize: 15,
@@ -176,6 +185,15 @@ minWidth: dynamicWidth,
 row: {
 height: 40,
 backgroundColor: theme.colors.surface,
+color: theme.colors.onSurface,
+shadowColor: theme.colors.secondary,
+shadowOffset: {
+  width: 0,
+  height: 2,
+},
+shadowOpacity: 0.25,
+shadowRadius: 3.84,
+elevation: 5,
 },
 rowText: {
 fontSize: 16,

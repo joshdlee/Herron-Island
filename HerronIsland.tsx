@@ -57,6 +57,11 @@ const pricingData = {
         "length_range": ["special"],
         "member": 190,
         "guest": 180
+      },
+      {
+        "length_range": ["walk on"],
+        "member": -10,
+        "guest": -20
       }
     ],
     "special_runs": 200
@@ -160,9 +165,11 @@ const HerronIsland = () => {
                 { color: theme.colors.onBackground },
               ]}
             >
-              {fare.length_range[0] === "special"
-                ? "Special"
-                : `${fare.length_range[0]} - ${fare.length_range[1]} ft`}
+          {fare.length_range[0] === "special"
+            ? "Special"
+            : fare.length_range[0] === "walk on"
+            ? "Walk On"
+            : `${fare.length_range[0]} - ${fare.length_range[1]} ft`}
             </Text>
             </View>
           <Switch

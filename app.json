@@ -3,11 +3,11 @@
     "userInterfaceStyle": "light",
     "name": "Herron Island",
     "slug": "herron-island",
-    "version": "1.0.18",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./AppStore.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Herron-Island-Teal.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,6 +20,7 @@
       "userInterfaceStyle": "automatic"
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
