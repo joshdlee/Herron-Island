@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { useTheme } from 'react-native-paper';
 // import { API_KEY } from '@env';
 
@@ -222,6 +222,8 @@ const Weather = () => {
   });
 
   return (
+    //scrollview
+<ScrollView>
     <View style={styles.container}>
         {alerts.length > 0 && renderAlerts()}
       <View style={styles.currentWeather}>
@@ -256,6 +258,7 @@ const Weather = () => {
         <Text style={styles.sunMoonText}>Moon Phase: {moonPhaseText(moonPhase)}</Text>
       </View>
     </View>
+    </ScrollView>
   );
 };
 

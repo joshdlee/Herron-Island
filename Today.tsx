@@ -18,6 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Modal, Portal, Button, Provider } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useFocusEffect } from "@react-navigation/native";
+import Card from "react-native-paper";
 
 const removeDuplicates = (times) => {
   return times.filter((time, index, self) => {
@@ -170,11 +171,6 @@ const TodayFerrySchedule = () => {
       setSelectedDate(new Date());
     }, [])
   );
-  // const [schedule, setSchedule] = useState();
-
-  // useEffect(() => {
-  //   setSchedule(getTodaySchedule());
-  // }, [selectedDate]);
 
   const getTodaySchedule = () => {
     let currentDate = selectedDate;
@@ -264,6 +260,20 @@ const TodayFerrySchedule = () => {
     return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   };
 
+  // Find the length of the longest array
+const maxLength = Math.max(islandTableData.length, mainlandTableData.length);
+
+// Fill the shorter array with empty data
+const filledIslandData = [...islandTableData, ...new Array(maxLength - islandTableData.length).fill(null)];
+const filledMainlandData = [...mainlandTableData, ...new Array(maxLength - mainlandTableData.length).fill(null)];
+// Merge filledIslandData and filledMainlandData into one array
+const combinedData = filledIslandData.map((islandRow, index) => ({
+  island: islandRow,
+  mainland: filledMainlandData[index],
+}));
+
+console.log(JSON.stringify(combinedData, null, 2));
+
   return (
     <View
       style={[
@@ -302,82 +312,165 @@ const TodayFerrySchedule = () => {
         </Modal>
       </Portal>
 
-      <View style={styles(theme).schedule}>
-        <View style={styles(theme).column}>
-          <Text
-            style={[
-              styles(theme).subHeading,
-              { color: theme.colors.onBackground, textAlign: "center" },
-            ]}
+      {/* <View style={[styles(theme).schedule, { flexDirection: 'row' }]}>
+  <ScrollView style={{ flex: 1 }}>
+    <View style={styles(theme).column}>
+      <Text
+        style={[
+          styles(theme).subHeading,
+          { color: theme.colors.onBackground, textAlign: "center" },
+        ]}
+      >
+        Island
+      </Text>
+      {renderNote("island")}
+      <ScrollView>
+        <View style={{ minHeight: islandTableData.length * 40 }}>
+          <Table
+            borderStyle={{
+              borderWidth: 1,
+              borderColor: theme.colors.outline,
+            }}
           >
-            Island
-          </Text>
-          {renderNote("island")}
-          <ScrollView>
-            <View style={{ minHeight: islandTableData.length * 40 }}>
-              <Table
-                borderStyle={{
-                  borderWidth: 1,
-                  borderColor: theme.colors.outline,
-                }}
-              >
-                {islandTableData.map((rowData, index) => (
-                  <Row
-                    key={index}
-                    data={rowData}
-                    style={[
-                      styles(theme).row,
-                      { backgroundColor: theme.colors.surface },
-                    ]}
-                    textStyle={[
-                      styles(theme).rowText,
-                      { color: theme.colors.onSurface },
-                    ]}
-                  />
-                ))}
-              </Table>
-            </View>
-            {renderScrollIndicator()}
-          </ScrollView>
+            {islandTableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                style={[
+                  styles(theme).row,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                textStyle={[
+                  styles(theme).rowText,
+                  { color: theme.colors.onSurface },
+                ]}
+              />
+            ))}
+          </Table>
         </View>
-        <View style={styles(theme).column}>
-          <Text
-            style={[
-              styles(theme).subHeading,
-              { color: theme.colors.onBackground, textAlign: "center" },
-            ]}
+        {renderScrollIndicator()}
+      </ScrollView>
+    </View>
+  </ScrollView>
+  <ScrollView style={{ flex: 1 }}>
+    <View style={styles(theme).column}>
+      <Text
+        style={[
+          styles(theme).subHeading,
+          { color: theme.colors.onBackground, textAlign: "center" },
+        ]}
+      >
+        Mainland
+      </Text>
+      {renderNote("mainland")}
+      <ScrollView>
+        <View style={{ minHeight: mainlandTableData.length * 40 }}>
+          <Table
+            borderStyle={{
+              borderWidth: 1,
+              borderColor: theme.colors.outline,
+            }}
           >
-            Mainland
-          </Text>
-          {renderNote("mainland")}
-          <ScrollView>
-            <View style={{ minHeight: mainlandTableData.length * 40 }}>
-              <Table
-                borderStyle={{
-                  borderWidth: 1,
-                  borderColor: theme.colors.outline,
-                }}
-              >
-                {mainlandTableData.map((rowData, index) => (
-                  <Row
-                    key={index}
-                    data={rowData}
-                    style={[
-                      styles(theme).row,
-                      { backgroundColor: theme.colors.surface },
-                    ]}
-                    textStyle={[
-                      styles(theme).rowText,
-                      { color: theme.colors.onSurface },
-                    ]}
-                  />
-                ))}
-              </Table>
-            </View>
-            {renderScrollIndicator()}
-          </ScrollView>
+            {mainlandTableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                style={[
+                  styles(theme).row,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                textStyle={[
+                  styles(theme).rowText,
+                  { color: theme.colors.onSurface },
+                ]}
+              />
+            ))}
+          </Table>
         </View>
+        {renderScrollIndicator()}
+      </ScrollView>
+    </View>
+  </ScrollView>
+</View> */}
+
+<ScrollView>
+<View style={[styles(theme).schedule, { flexDirection: 'row', padding: 0, justifyContent:"center" }]}>
+      <View style={styles(theme).column}>
+        <Text
+          style={[
+            styles(theme).subHeading,
+            { color: theme.colors.onBackground, textAlign: "center", },
+          ]}
+        >
+          Island
+        </Text>
+        {renderNote("island")}
+        <View style={{ minHeight: islandTableData.length * 40 }}>
+          <Table
+            borderStyle={{
+              borderWidth: 1,
+              borderColor: theme.colors.outline,
+            }}
+          >
+            {islandTableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                style={[
+                  styles(theme).row,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                textStyle={[
+                  styles(theme).rowText,
+                  { color: theme.colors.onSurface },
+                ]}
+              />
+            ))}
+          </Table>
+        </View>
+        {renderScrollIndicator()}
       </View>
+      <View style={styles(theme).column}>
+        <Text
+          style={[
+            styles(theme).subHeading,
+            { color: theme.colors.onBackground, textAlign: "center" },
+          ]}
+        >
+          Mainland
+        </Text>
+        {renderNote("mainland")}
+        <View style={{ minHeight: mainlandTableData.length * 40 }}>
+          <Table
+            borderStyle={{
+              borderWidth: 1,
+              borderColor: theme.colors.outline,
+            }}
+          >
+            {mainlandTableData.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                style={[
+                  styles(theme).row,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                textStyle={[
+                  styles(theme).rowText,
+                  { color: theme.colors.onSurface },
+                ]}
+              />
+            ))}
+          </Table>
+        </View>
+        {renderScrollIndicator()}
+      </View>
+  </View>
+</ScrollView>
+
+
+
+
     </View>
   );
 };

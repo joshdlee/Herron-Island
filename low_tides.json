@@ -3,917 +3,606 @@
     "5-8-2023": {
       "cancel": {
         "island": {
-          "departure_times": [
-            "3:30PM"
-          ]
+          "departure_times": ["3:30PM"]
         }
       },
       "reschedule": {
         "island": {
-          "departure_times": [
-            "3:45PM"
-          ]
+          "departure_times": ["3:45PM"]
         }
       }
     },
     "5-9-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM"
-          ]
+          "departure_times": ["4:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM"
-          ]
+          "departure_times": ["3:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:30PM"
-          ]
+          "departure_times": ["1:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:00PM"
-          ]
+          "departure_times": ["1:00PM"]
         }
       }
     },
     "5-10-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM",
-            "5:00PM"
-          ]
+          "departure_times": ["4:00PM", "5:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM",
-            "4:30PM"
-          ]
+          "departure_times": ["3:30PM", "4:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:30PM",
-            "2:30PM"
-          ]
+          "departure_times": ["1:30PM", "2:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:00PM",
-            "2:00PM"
-          ]
+          "departure_times": ["1:00PM", "2:00PM"]
         }
       }
     },
     "5-19-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "5-20-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "6-3-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "10:30AM",
-            "11:30AM"
-          ]
+          "departure_times": ["11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "11:00PM",
-            "12:00PM"
-          ]
+          "departure_times": ["10:30AM", "11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "6-4-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "6-5-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "11:00AM"
-          ]
+          "departure_times": ["11:00AM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM"
-          ]
+          "departure_times": ["10:30AM"]
         }
       }
     },
     "6-6-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM",
-            "3:30PM"
-          ]
+          "departure_times": ["11:30AM", "3:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM"
-          ]
+          "departure_times": ["10:00AM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "3:45PM"
-          ]
+          "departure_times": ["9:30AM", "3:45PM"]
         }
       }
     },
     "6-7-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM"
-          ]
+          "departure_times": ["4:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM"
-          ]
+          "departure_times": ["3:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:00PM"
-          ]
+          "departure_times": ["1:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:30PM"
-          ]
+          "departure_times": ["1:00PM"]
         }
       }
     },
     "6-8-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM",
-            "5:00PM"
-          ]
+          "departure_times": ["4:00PM", "5:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM",
-            "4:30PM"
-          ]
+          "departure_times": ["3:30PM", "4:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:00PM",
-            "2:00PM"
-          ]
+          "departure_times": ["1:30PM", "2:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:30PM",
-            "2:30PM"
-          ]
+          "departure_times": ["1:00PM", "2:00PM"]
         }
       }
     },
     "6-16-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "2:30PM"
-          ]
+          "departure_times": ["10:00AM", "2:30PM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "2:00PM"
-          ]
+          "departure_times": ["9:30AM", "2:00PM"]
         }
       }
     },
     "6-17-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:00AM",
-            "12:00PM"
-          ]
+          "departure_times": ["11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM",
-          ]
+          "departure_times": ["10:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "6-18-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "6-19-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["11:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "11:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["10:30AM", "2:30PM"]
         }
       }
     },
     "7-1-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "9:30AM",
-            "10:30AM",
-            "11:30AM"
-          ]
+          "departure_times": ["10:00AM", "11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:00AM",
-            "11:00AM",
-            "12:00PM"
-          ]
+          "departure_times": ["9:30AM", "10:30AM", "11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-2-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "9:30AM",
-            "10:30AM",
-            "11:30AM"
-          ]
+          "departure_times": ["10:00AM", "11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:00AM",
-            "11:00AM",
-            "12:00PM"
-          ]
+          "departure_times": ["9:30AM", "10:30AM", "11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-3-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-4-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:45PM"
-          ]
+          "departure_times": ["2:45PM"]
         }
       }
     },
     "7-5-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "11:00AM"
-          ]
+          "departure_times": ["11:00AM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM"
-          ]
+          "departure_times": ["10:30AM"]
         }
       }
     },
     "7-6-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM"
-          ]
+          "departure_times": ["4:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM"
-          ]
+          "departure_times": ["3:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM"
-          ]
+          "departure_times": ["10:00AM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM"
-          ]
+          "departure_times": ["9:30AM"]
         }
       }
     },
     "7-7-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "4:00PM"
-          ]
+          "departure_times": ["4:00PM"]
         },
         "island": {
-          "departure_times": [
-            "3:30PM"
-          ]
+          "departure_times": ["3:30PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:30PM"
-          ]
+          "departure_times": ["1:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:00PM"
-          ]
+          "departure_times": ["1:00PM"]
         }
       }
     },
     "7-15-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:00AM",
-            "12:00PM"
-          ]
+          "departure_times": ["11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM",
-            "11:30AM"
-          ]
+          "departure_times": ["10:30AM", "11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-16-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "11:00AM",
-            "12:00PM"
-          ]
+          "departure_times": ["11:00AM", "12:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM",
-            "11:30AM"
-          ]
+          "departure_times": ["10:30AM", "11:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-17-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "7-18-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["10:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["9:30AM", "2:30PM"]
         }
       }
     },
     "7-30-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "11:00AM"
-          ]
+          "departure_times": ["10:00AM", "11:00AM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "10:30AM"
-          ]
+          "departure_times": ["9:30AM", "10:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:00PM"
-          ]
+          "departure_times": ["1:00PM"]
         },
         "island": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         }
       }
     },
     "7-31-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "12:30PM"
-          ]
+          "departure_times": ["10:00AM", "12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "12:00PM"
-          ]
+          "departure_times": ["9:30AM", "12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "3:00PM"
-          ]
+          "departure_times": ["3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "2:30PM"
-          ]
+          "departure_times": ["2:30PM"]
         }
       }
     },
     "8-1-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["10:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["9:30AM", "2:30PM"]
         }
       }
     },
     "8-2-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "11:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["11:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["10:30AM", "2:30PM"]
         }
       }
     },
     "8-3-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "11:30AM"
-          ]
+          "departure_times": ["11:30AM"]
         },
         "island": {
-          "departure_times": [
-            "11:00AM"
-          ]
+          "departure_times": ["11:00AM"]
         }
       }
     },
     "8-28-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "10:00AM"
-          ]
+          "departure_times": ["10:00AM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM"
-          ]
+          "departure_times": ["9:30AM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "1:30PM"
-          ]
+          "departure_times": ["1:30PM"]
         },
         "island": {
-          "departure_times": [
-            "1:00PM"
-          ]
+          "departure_times": ["1:00PM"]
         }
       }
     },
     "8-30-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "11:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["11:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "10:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["10:30AM", "2:30PM"]
         }
       }
     },
     "8-31-2023": {
       "cancel": {
         "mainland": {
-          "departure_times": [
-            "12:30PM"
-          ]
+          "departure_times": ["12:30PM"]
         },
         "island": {
-          "departure_times": [
-            "12:00PM"
-          ]
+          "departure_times": ["12:00PM"]
         }
       },
       "reschedule": {
         "mainland": {
-          "departure_times": [
-            "10:00AM",
-            "3:00PM"
-          ]
+          "departure_times": ["10:00AM", "3:00PM"]
         },
         "island": {
-          "departure_times": [
-            "9:30AM",
-            "2:30PM"
-          ]
+          "departure_times": ["9:30AM", "2:30PM"]
         }
       }
     }
