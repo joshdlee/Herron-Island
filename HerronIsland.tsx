@@ -14,6 +14,8 @@ import {
 import { useTheme } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Switch, RadioButton, Divider } from "react-native-paper";
+// import app json for version number 
+import * as appJson from "./app.json";
 
 const pricingData = {
   prices: {
@@ -92,7 +94,7 @@ const HerronIsland = () => {
   };
 
   const openMap = () => {
-    const address = "20801 Isted Rd NW, Lakebay, WA";
+    const address = "1814 N Herron Rd NW Anderson Island, WA  98349";
     const url = Platform.select({
       ios: `maps://maps.apple.com/?daddr=${encodeURIComponent(address)}`,
       android: `geo:0,0?q=${encodeURIComponent(address)}`,
@@ -121,9 +123,22 @@ const HerronIsland = () => {
     setPrice(vehicleCost + driverCost + adultCost + childCost);
   };
 
+  // get version number from app json expo version
+  const version = appJson.expo.version;
+
+
+
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <View style={styles(theme).container}>
+        <Text
+          style={[
+            styles(theme).description,
+            { color: theme.colors.onBackground },
+          ]}
+        >
+          Version: {version}
+        </Text>
         <Text
           style={[styles(theme).heading, { color: theme.colors.onBackground }]}
         >

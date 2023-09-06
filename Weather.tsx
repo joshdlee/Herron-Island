@@ -222,7 +222,7 @@ const Weather = () => {
   });
 
   return (
-    //scrollview
+<View style={{flex: 1, backgroundColor: theme.colors.background}}>
 <ScrollView>
     <View style={styles.container}>
         {alerts.length > 0 && renderAlerts()}
@@ -259,6 +259,7 @@ const Weather = () => {
       </View>
     </View>
     </ScrollView>
+    </View>
   );
 };
 

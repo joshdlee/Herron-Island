@@ -5,11 +5,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, StyleSheet, Platform, useColorScheme, Appearance, StatusBar, Image } from 'react-native';
 import { Provider as PaperProvider, Button } from 'react-native-paper';
 import TideChart from './TideChart';
-import { lightTheme, darkTheme } from './theme';
+import { lightTheme, darkTheme, sunsetTheme } from './theme';
 import FerryTab from './FerryTab';
 import Weather from './Weather';
 import HerronIsland from './HerronIsland';
 import { useState } from 'react';
+import {Amplify, API, graphqlOperation } from 'aws-amplify';
+import awsconfig from './src/aws-exports';
+
+Amplify.configure(awsconfig);
+
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -17,8 +22,8 @@ function MyTabs({ theme, navigation }) {
   return (
     <Tab.Navigator
       initialRouteName="Ferry"
-      activeColor={theme.colors.accent}
-      inactiveColor={theme.colors.onSurfaceVariant}
+      activeColor={theme.colors.primary}
+      inactiveColor={theme.colors.onSurface}
       barStyle={{
         backgroundColor: theme.colors.surfaceVariant,
         borderTopColor: theme.colors.outline,
@@ -63,7 +68,6 @@ function MyTabs({ theme, navigation }) {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="island" color={color} size={26} />
           ),
-          tabBarButton: () => null,
         }}
       />
     </Tab.Navigator>
@@ -76,16 +80,27 @@ export default function App(navigation) {
   const [userTheme, setUserTheme] = useState(null);
 
   const toggleTheme = () => {
-    setUserTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
-  };
+    if (userTheme === 'light') {
+        setUserTheme('dark');
+    } else if (userTheme === 'dark') {
+        setUserTheme('sunset');
+    } else {
+        setUserTheme('light');
+    }
+};
 
-  const theme = userTheme
-    ? userTheme === 'dark'
-      ? darkTheme
-      : lightTheme
-    : colorScheme === 'dark'
-    ? darkTheme
-    : lightTheme;
+
+const theme = userTheme
+    ? (userTheme === 'dark'
+        ? darkTheme
+        : (userTheme === 'sunset' 
+            ? sunsetTheme 
+            : lightTheme))
+    : (colorScheme === 'dark'
+        ? darkTheme
+        : lightTheme);
+
+
 
   return (
     <PaperProvider theme={theme}>

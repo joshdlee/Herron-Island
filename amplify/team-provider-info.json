@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-herronisland-dev-125350-authRole",
+      "UnauthRoleArn": "arn:aws:iam::994216198967:role/amplify-herronisland-dev-125350-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::994216198967:role/amplify-herronisland-dev-125350-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-herronisland-dev-125350-deployment",
+      "UnauthRoleName": "amplify-herronisland-dev-125350-unauthRole",
+      "StackName": "amplify-herronisland-dev-125350",
+      "StackId": "arn:aws:cloudformation:us-east-1:994216198967:stack/amplify-herronisland-dev-125350/71610830-49ca-11ee-a923-0abb0d9c739d",
+      "AmplifyAppId": "d1qm9abx89tj1q"
+    },
+    "categories": {
+      "api": {
+        "herronisland": {}
+      },
+      "auth": {
+        "herronisland22a9aa7b": {}
+      }
+    }
+  }
+}
