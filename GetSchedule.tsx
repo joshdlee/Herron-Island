@@ -139,10 +139,11 @@ const styles = {
 
 export default function GetSchedule() {
   const theme = useTheme();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchInitialData() {
+  setLoading(true);
       let fetchedSchedule = await fetchScheduleForDate(date);
       const lowTides = await fetchLowTides(date);
 
@@ -251,6 +252,7 @@ export default function GetSchedule() {
 
   const onChange = async (event, selectedDate) => {
     setShowPicker(false);
+    setLoading(true);
 
     if (selectedDate) {
       setDate(selectedDate);
@@ -329,6 +331,7 @@ export default function GetSchedule() {
         fetchedSchedule.islandDepartures
       );
       setSchedule(fetchedSchedule);
+      setLoading(false);
     }
   };
 

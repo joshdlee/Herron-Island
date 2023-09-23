@@ -181,7 +181,7 @@ const handleRefresh = async () => {
               textAlign: "center",
             }}
           >
-            Winter Daily Schedules
+            Winter Daily Schedules (October 1 - March 31)
           </Text>
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
             <Text

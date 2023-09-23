@@ -181,7 +181,7 @@ const handleRefresh = async () => {
               textAlign: "center",
             }}
           >
-            Summer Daily Schedules
+            Summer Daily Schedules (April 1 - September 30)
           </Text>
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
             <Text
