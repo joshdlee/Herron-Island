@@ -8,6 +8,8 @@ import { useTheme, Modal, Portal } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 function getSeasonAndDay(date: Date) {
   const month = date.getMonth() + 1;
@@ -29,9 +31,14 @@ function getSeasonAndDay(date: Date) {
 }
 
 async function fetchAllSchedules() {
-  Amplify.Logger.LOG_LEVEL = "DEBUG";
-  const result = await API.graphql(graphqlOperation(customListDaySchedules));
-  return result.data?.listDaySchedules?.items || [];
+  try {
+    Amplify.Logger.LOG_LEVEL = "DEBUG";
+    const result = await API.graphql(graphqlOperation(customListDaySchedules));
+    return result.data?.listDaySchedules?.items || [];
+  } catch (error) {
+    console.error("Error fetching all schedules:", error);
+    // Handle or rethrow the error as needed
+  }
 }
 
 async function fetchScheduleForDate(date) {
@@ -76,6 +83,7 @@ async function fetchLowTides(date) {
   });
   console.log(`Fetching low tides for: ${dateString}`);
   console.log("Fetch Low Tides Result:", result);
+  console.log("Date String in fetchLowTides:", dateString);
 
   return result.data?.listLowTides?.items[0] || null;
 }
@@ -227,6 +235,22 @@ export default function GetSchedule() {
   const [showPicker, setShowPicker] = useState(false);
   const [schedule, setSchedule] = useState(null);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const today = new Date();
+      setDate(today);
+  
+      // Call the existing onChange function with the new date
+      onChange(null, today);
+  
+      return () => {
+        // Optional cleanup code
+      };
+    }, [])
+  );
+  
+  
+
   function convertTo24Hour(time) {
     if (!time || time.length === 0) {
       return time;
@@ -339,6 +363,9 @@ export default function GetSchedule() {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return d.toLocaleDateString(undefined, options);
   }
+
+  console.log("Date:", date);
+  console.log("Schedule:", schedule);
 
   return (
     <View

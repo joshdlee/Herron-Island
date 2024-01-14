@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import { Auth } from 'aws-amplify';
 
-function CustomSignIn() {
+function AdminScreen({ onLoginSuccess }) { // Receive the onLoginSuccess prop
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -30,7 +30,7 @@ function CustomSignIn() {
       } else {
         console.log('Successfully signed in:', user);
         setAttempts(0);
-        // Navigate to your app's main screen or set user state
+        onLoginSuccess(); // Call the onLoginSuccess function when the user logs in successfully
       }
 
     } catch (error) {
@@ -95,4 +95,4 @@ function CustomSignIn() {
   );
 }
 
-export default CustomSignIn;
+export default AdminScreen;

@@ -5,13 +5,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, StyleSheet, Platform, useColorScheme, Appearance, StatusBar, Image } from 'react-native';
 import { Provider as PaperProvider, Button } from 'react-native-paper';
 import TideChart from './TideChart';
-import { lightTheme, darkTheme, sunsetTheme } from './theme';
+import { lightTheme, darkTheme } from './theme';
 import FerryTab from './FerryTab';
 import Weather from './Weather';
 import HerronIsland from './HerronIsland';
 import { useState } from 'react';
 import {Amplify, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
+
 
 Amplify.configure(awsconfig);
 
@@ -81,26 +82,13 @@ export default function App(navigation) {
 
   const toggleTheme = () => {
     if (userTheme === 'light') {
-        setUserTheme('dark');
-    } else if (userTheme === 'dark') {
-        setUserTheme('sunset');
+      setUserTheme('dark');
     } else {
-        setUserTheme('light');
+      setUserTheme('light');
     }
-};
+  };
 
-
-const theme = userTheme
-    ? (userTheme === 'dark'
-        ? darkTheme
-        : (userTheme === 'sunset' 
-            ? sunsetTheme 
-            : lightTheme))
-    : (colorScheme === 'dark'
-        ? darkTheme
-        : lightTheme);
-
-
+  const theme = userTheme === 'dark' ? darkTheme : lightTheme;
 
   return (
     <PaperProvider theme={theme}>

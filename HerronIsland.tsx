@@ -17,71 +17,75 @@ import { Switch, RadioButton, Divider } from "react-native-paper";
 // import app json for version number 
 import * as appJson from "./app.json";
 
-const pricingData = {
-  prices: {
-    vehicle_driver: {
-      member: 10,
-      guest: 20,
-    },
-    passengers_walk_ons: {
-      age_12_and_over: 3,
-      age_5_to_11: 1,
-      under_age_5: 0,
-    },
-    vehicle_length_fares: [
-      {
-        length_range: [0, 21],
-        member: 0,
-        guest: 0,
-      },
-      {
-        length_range: [22, 30],
-        member: 10,
-        guest: 20,
-      },
-      {
-        length_range: [31, 40],
-        member: 20,
-        guest: 40,
-      },
-      {
-        length_range: [41, 50],
-        member: 30,
-        guest: 60,
-      },
-      {
-        length_range: [51, 60],
-        member: 40,
-        guest: 80,
-      },
-      {
-        length_range: ["special"],
-        member: 190,
-        guest: 180,
-      },
-      {
-        length_range: ["walk on"],
-        member: -10,
-        guest: -20,
-      },
-    ],
-    special_runs: 200,
-  },
-};
-
-const getPriceForVehicleLength = (index, isMember) => {
-  const fare = pricingData.prices.vehicle_length_fares[index];
-  return isMember ? fare.member : fare.guest;
-};
+// const pricingData = {
+//   prices: {
+//     vehicle_driver: {
+//       member: 10,
+//       guest: 20,
+//     },
+//     passengers_walk_ons: {
+//       age_12_and_over: 3,
+//       age_5_to_11: 1,
+//       under_age_5: 0,
+//     },
+//     vehicle_length_fares: [
+//       {
+//         length_range: [0, 21],
+//         member: 0,
+//         guest: 0,
+//       },
+//       {
+//         length_range: [22, 30],
+//         member: 10,
+//         guest: 20,
+//       },
+//       {
+//         length_range: [31, 40],
+//         member: 20,
+//         guest: 40,
+//       },
+//       {
+//         length_range: [41, 50],
+//         member: 30,
+//         guest: 60,
+//       },
+//       {
+//         length_range: [51, 60],
+//         member: 40,
+//         guest: 80,
+//       },
+//       {
+//         length_range: ["special"],
+//         member: 190,
+//         guest: 180,
+//       },
+//       {
+//         length_range: ["walk on"],
+//         member: -10,
+//         guest: -20,
+//       },
+//     ],
+//     special_runs: 200,
+//   },
+// };
+const ferryFees = [
+  { description: 'Car and Driver under 22 feet', member: '$10', other: '$25' },
+  { description: 'Car and Driver under 22 feet and width over 7\'', member: '$20', other: '$35' },
+  { description: 'Walk-on or Vehicle Passenger Age 12 and up', member: '$5', other: '$5' },
+  { description: 'Vehicle Passenger Age 5-11', member: '$1', other: '$1' },
+  { description: 'Vehicle Passenger Age 4 and under', member: 'Free', other: 'Free' },
+  { description: 'Vehicle Length 22\'-30\'', member: '$20', other: '$40' },
+  { description: 'Vehicle Length 31\'-40\'', member: '$30', other: '$60' },
+  { description: 'Vehicle Length 41\'-50\'', member: '$40', other: '$80' },
+  { description: 'Vehicle Length 51\'-60\'', member: '$50', other: '$100' },
+  { description: 'Special Runs (One Way)', member: '$250', other: '$250' },
+  { description: 'Book Of 10 $10 Tickets', member: '$90', other: 'N/A' },
+  { description: 'Book of 25 $5 Tickets', member: '$120', other: 'N/A' },
+  { description: '911 Initiated Runs', member: 'Free', other: 'Free' }
+];
 
 const HerronIsland = () => {
   const theme = useTheme();
-
-  const [membership, setMembership] = useState("Member");
-  const [vehicleLength, setVehicleLength] = useState(0);
-  const [adults, setAdults] = useState(0);
-  const [children, setChildren] = useState(0);
-  const [price, setPrice] = useState(0);
 
   const openURL = (url) => {
     Linking.canOpenURL(url).then((supported) => {
@@ -103,259 +107,47 @@ const HerronIsland = () => {
     openURL(url);
   };
 
-  const calculatePrice = () => {
-    const isMember = membership === "Member";
-    const vehicleCost = getPriceForVehicleLength(
-      Number(vehicleLength),
-      isMember
-    );
-    const driverCost = isMember
-      ? pricingData.prices.vehicle_driver.member
-      : pricingData.prices.vehicle_driver.guest;
-    const adultCost =
-      Number(adults) * pricingData.prices.passengers_walk_ons.age_12_and_over;
-    const childCost =
-      Number(children) * pricingData.prices.passengers_walk_ons.age_5_to_11;
-    console.log(
-      `vehicleCost:(${vehicleCost}) + driverCost=(${driverCost}) + adultCost:(${adultCost}) + childCost:(${childCost})`,
-      vehicleCost + driverCost + adultCost + childCost
-    );
-    setPrice(vehicleCost + driverCost + adultCost + childCost);
-  };
-
   // get version number from app json expo version
   const version = appJson.expo.version;
-
-
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <View style={styles(theme).container}>
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Version: {version}
-        </Text>
-        <Text
-          style={[styles(theme).heading, { color: theme.colors.onBackground }]}
-        >
-          Herron Island Ferry Schedule
-        </Text>
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          This application offers ferry schedule details for the Herron Island
-          ferry, using information derived from the schedule published on
-          herronisland.org. Please note that this application is not officially
-          endorsed or supported by the Herron Management Company (HMC).{" "}
+        <Text style={[styles(theme).description, { color: theme.colors.onBackground }]}>Version: {version}</Text>
+        <Text style={[styles(theme).heading, { color: theme.colors.onBackground }]}>Herron Island Ferry Schedule</Text>
+        <Text style={[styles(theme).description, { color: theme.colors.onBackground }]}>
+          This application offers ferry schedule details for the Herron Island ferry, using information derived from the schedule published on herronisland.org. Please note that this application is not officially endorsed or supported by the Herron Management Company (HMC).
         </Text>
         <TouchableOpacity onPress={() => openURL("http://herronisland.org/")}>
-          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>
-            Visit Herron Island Website
-          </Text>
+          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>Visit Herron Island Website</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={openMap}>
-          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>
-            Get directions to Herron Island Ferry Dock
-          </Text>
+          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>Get directions to Herron Island Ferry Dock</Text>
         </TouchableOpacity>
-
         <Divider style={{ marginVertical: 16 }} />
+        <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>2023/2024 Ferry Fees</Text>
+        
+        <View style={styles(theme).table}>
+          {/* Table Header */}
+          <View style={styles(theme).headerRow}>
+            <Text style={[styles(theme).headerCell, { flex: 3 }]}>Description</Text>
+            <Text style={[styles(theme).headerCell, { flex: 1 }]}>Member</Text>
+            <Text style={[styles(theme).headerCell, { flex: 1 }]}>Other</Text>
+          </View>
 
-        {/* Pricing calculator component */}
-        <Text
-          style={[
-            styles(theme).subHeading,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Ferry Pricing Calculator
-        </Text>
-
-        {/* Membership Switch */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 16,
-            width: 150,
-          }}
-        >
-          <Text
-            style={[
-              styles(theme).description,
-              { color: theme.colors.onBackground },
-            ]}
-          >
-            Membership:{" "}
-          </Text>
-          <Switch
-            value={membership === "Member"}
-            onValueChange={(value) => setMembership(value ? "Member" : "Guest")}
-            color={theme.colors.primary}
-          />
-          <Text
-            style={[
-              styles(theme).description,
-              { color: theme.colors.onBackground },
-            ]}
-          >
-            {membership}
-          </Text>
-        </View>
-        <Divider style={{ marginVertical: 16 }} />
-
-        {/* Vehicle Length Radio Buttons */}
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Vehicle Length:
-        </Text>
-        <View style={styles(theme).switchContainer}>
-          {pricingData.prices.vehicle_length_fares.map((fare, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 10,
-              }}
-            >
-              <View style={{ width: 150 }}>
-                <Text
-                  style={[
-                    styles(theme).description,
-                    { color: theme.colors.onBackground },
-                  ]}
-                >
-                  {fare.length_range[0] === "special"
-                    ? "Special"
-                    : fare.length_range[0] === "walk on"
-                    ? "Walk On"
-                    : `${fare.length_range[0]} - ${fare.length_range[1]} ft`}
-                </Text>
-              </View>
-              <Switch
-                color={theme.colors.primary}
-                onValueChange={() => setVehicleLength(index)}
-                value={vehicleLength === index}
-              />
+          {/* Table Rows */}
+          {ferryFees.map((fee, index) => (
+            <View key={index} style={styles(theme).row}>
+              <Text style={[styles(theme).cell, { flex: 3 }]}>{fee.description || 'N/A'}</Text>
+              <Text style={[styles(theme).cell, { flex: 1 }]}>{fee.member || 'N/A'}</Text>
+              <Text style={[styles(theme).cell, { flex: 1 }]}>{fee.other || 'N/A'}</Text>
             </View>
           ))}
         </View>
-
-        <Divider style={{ marginVertical: 16 }} />
-
-        {/* Passengers (excluding driver) */}
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Passengers (excluding driver):
-        </Text>
-
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Adults (Age 12 and Over):
-        </Text>
-        <View style={styles(theme).counterContainer}>
-          <TouchableOpacity
-            onPress={() => setAdults(Math.max(0, adults - 1))}
-            style={styles(theme).counterButton}
-          >
-            <Text style={{ fontSize: 24, color: theme.colors.onBackground }}>
-              -
-            </Text>
-          </TouchableOpacity>
-          <Text style={{ fontSize: 16, color: theme.colors.onBackground }}>
-            {adults}
-          </Text>
-          <TouchableOpacity
-            onPress={() => setAdults(adults + 1)}
-            style={styles(theme).counterButton}
-          >
-            <Text style={{ fontSize: 24, color: theme.colors.onBackground }}>
-              +
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Children (Age 5 - 11):
-        </Text>
-        <View style={styles(theme).counterContainer}>
-          <TouchableOpacity
-            onPress={() => setChildren(Math.max(0, children - 1))}
-            style={styles(theme).counterButton}
-          >
-            <Text style={{ fontSize: 24, color: theme.colors.onBackground }}>
-              -
-            </Text>
-          </TouchableOpacity>
-          <Text style={{ fontSize: 16, color: theme.colors.onBackground }}>
-            {children}
-          </Text>
-          <TouchableOpacity
-            onPress={() => setChildren(children + 1)}
-            style={styles(theme).counterButton}
-          >
-            <Text style={{ fontSize: 24, color: theme.colors.onBackground }}>
-              +
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Children (Under age 5): Free
-        </Text>
-        <Divider style={{ marginVertical: 16 }} />
-
-        <TouchableOpacity
-          onPress={calculatePrice}
-          style={styles(theme).CalcButton}
-        >
-          <Text style={{ fontSize: 24, color: theme.colors.onBackground }}>
-            Calculate Price
-          </Text>
-        </TouchableOpacity>
-        <Text
-          style={[
-            styles(theme).description,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Total Price: ${price.toFixed(2)}
-        </Text>
       </View>
     </ScrollView>
   );
+  
 };
 
 const styles = (theme) => {
@@ -427,6 +219,33 @@ const styles = (theme) => {
       textDecorationLine: "underline",
       marginBottom: 8,
       color: theme.colors.primary,
+    },
+    table: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#ddd',
+    },
+    headerRow: {
+      flexDirection: 'row',
+      backgroundColor: theme.colors.primary, // Assuming this is okay for both themes
+      padding: 8,
+    },
+    headerCell: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+      paddingHorizontal: 4,
+      color: '#fff', // Typically, a contrasting color to the background
+    },
+    row: {
+      flexDirection: 'row',
+      borderBottomWidth: 1,
+      borderColor: '#ddd',
+      padding: 8,
+    },
+    cell: {
+      textAlign: 'center',
+      paddingHorizontal: 4,
+      color: theme.colors.onBackground, // Dynamically set text color based on theme
     },
   });
 };

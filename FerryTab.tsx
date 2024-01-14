@@ -13,6 +13,7 @@ import GetWinter from "./GetWinter";
 import GetCancellations from "./GetCancellations";
 import GetHoliday from "./GetHoliday";
 import AdminScreen from "./AdminScreen";
+import AdminTab from "./AdminTab";
 
 export default function FerryTab() {
   const theme = useTheme();
@@ -31,7 +32,9 @@ export default function FerryTab() {
       case "Holidays":
         return <GetHoliday />;
       case "Admin":
-        return <AdminScreen />;
+        return <AdminScreen onLoginSuccess={() => setActiveComponent('AdminTab')} />;
+      case "AdminTab":
+        return <AdminTab />;
       default:
         return null;
     }
