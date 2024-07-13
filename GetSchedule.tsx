@@ -8,8 +8,7 @@ import { useTheme, Modal, Portal } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useFocusEffect } from '@react-navigation/native';
-
+import { useFocusEffect } from "@react-navigation/native";
 
 function getSeasonAndDay(date: Date) {
   const month = date.getMonth() + 1;
@@ -107,24 +106,32 @@ function adjustScheduleForLowTides(schedule, lowTides) {
     ...lowTides.rescheduleIsland,
   ];
 
-    // Check if there are any cancellations due to low tides and specify the type
-    let alertMessage = "";
+  // Check if there are any cancellations due to low tides and specify the type
+  let alertMessage = "";
 
-    // Check for Island cancellations
-    const islandCancellations = lowTides.cancelIsland.filter(time => time.trim() !== "");
-    if (islandCancellations.length > 0) {
-        alertMessage += `Island departures cancelled: ${islandCancellations.join(", ")}. `;
-    }
+  // Check for Island cancellations
+  const islandCancellations = lowTides.cancelIsland.filter(
+    (time) => time.trim() !== ""
+  );
+  if (islandCancellations.length > 0) {
+    alertMessage += `Island departures cancelled: ${islandCancellations.join(
+      ", "
+    )}. `;
+  }
 
-    // Check for Mainland cancellations
-    const mainlandCancellations = lowTides.cancelMainland.filter(time => time.trim() !== "");
-    if (mainlandCancellations.length > 0) {
-        alertMessage += `Mainland departures cancelled: ${mainlandCancellations.join(", ")}. `;
-    }
+  // Check for Mainland cancellations
+  const mainlandCancellations = lowTides.cancelMainland.filter(
+    (time) => time.trim() !== ""
+  );
+  if (mainlandCancellations.length > 0) {
+    alertMessage += `Mainland departures cancelled: ${mainlandCancellations.join(
+      ", "
+    )}. `;
+  }
 
-    if (alertMessage) {
-        Alert.alert("Tide Cancellation", alertMessage.trim(), [{ text: "OK" }]);
-    }
+  if (alertMessage) {
+    Alert.alert("Tide Cancellation", alertMessage.trim(), [{ text: "OK" }]);
+  }
 
   return {
     ...schedule,
@@ -151,7 +158,7 @@ export default function GetSchedule() {
 
   useEffect(() => {
     async function fetchInitialData() {
-  setLoading(true);
+      setLoading(true);
       let fetchedSchedule = await fetchScheduleForDate(date);
       const lowTides = await fetchLowTides(date);
 
@@ -165,7 +172,7 @@ export default function GetSchedule() {
         }
       );
 
-            // Convert and sort times
+      // Convert and sort times
       // iterate through fetchedSchedule.mainlandDepartures and convert each time to 24 hour time
       fetchedSchedule.mainlandDepartures =
         fetchedSchedule.mainlandDepartures.map((time) => convertTo24Hour(time));
@@ -195,29 +202,41 @@ export default function GetSchedule() {
         fetchedSchedule.mainlandDepartures
       );
 
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
-        (time) => convertTo24Hour(time)
-      );
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.sort(
-        (a, b) => {
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
+      //   (time) => convertTo24Hour(time)
+      // );
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.sort(
+      //   (a, b) => {
+      //     const timeA = parseInt(a.replace(":", ""));
+      //     const timeB = parseInt(b.replace(":", ""));
+      //     return timeA - timeB;
+      //   }
+      // );
+
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
+      //   (time) => {
+      //     let [hours, minutes] = time.split(":");
+      //     if (hours > 12) {
+      //       hours = hours - 12;
+      //       return `${hours}:${minutes}PM`;
+      //     } else if (hours == 12) {
+      //       return `${hours}:${minutes}PM`;
+      //     } else {
+      //       return `${hours}:${minutes}AM`;
+      //     }
+      //   }
+      // );
+
+      // Process islandDepartures after the changes for mainlandDepartures
+      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures
+        .map((time) => convertTo24Hour(time))
+        .filter((time) => time !== null && time.includes(":")) // Ensure valid times
+        .sort((a, b) => {
           const timeA = parseInt(a.replace(":", ""));
           const timeB = parseInt(b.replace(":", ""));
           return timeA - timeB;
-        }
-      );
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
-        (time) => {
-          let [hours, minutes] = time.split(":");
-          if (hours > 12) {
-            hours = hours - 12;
-            return `${hours}:${minutes}PM`;
-          } else if (hours == 12) {
-            return `${hours}:${minutes}PM`;
-          } else {
-            return `${hours}:${minutes}AM`;
-          }
-        }
-      );
+        })
+        .map((time) => formatDate(time)); // Format back to AM/PM
 
       console.log(
         "function and sorted Island Departures:",
@@ -239,22 +258,24 @@ export default function GetSchedule() {
     React.useCallback(() => {
       const today = new Date();
       setDate(today);
-  
+
       // Call the existing onChange function with the new date
       onChange(null, today);
-  
+
       return () => {
         // Optional cleanup code
       };
     }, [])
   );
-  
-  
 
   function convertTo24Hour(time) {
     if (!time || time.length === 0) {
       return time;
     }
+
+    // if (!time || !time.includes(":") || time.length < 6) { // Ensures it has colon and AM/PM
+    //   return null; // Return null if invalid
+    // }
 
     let [hours, minutes] = time.split(":");
 
@@ -298,57 +319,69 @@ export default function GetSchedule() {
 
       // Convert and sort times
       // iterate through fetchedSchedule.mainlandDepartures and convert each time to 24 hour time
-      fetchedSchedule.mainlandDepartures =
-        fetchedSchedule.mainlandDepartures.map((time) => convertTo24Hour(time));
-      // convert to 24 hour time interger and sort
-      fetchedSchedule.mainlandDepartures =
-        fetchedSchedule.mainlandDepartures.sort((a, b) => {
+      fetchedSchedule.mainlandDepartures = fetchedSchedule.mainlandDepartures
+        .map((time) => convertTo24Hour(time))
+        .filter((time) => time !== null && time.includes(":")) // Ensure valid times
+        .sort((a, b) => {
           const timeA = parseInt(a.replace(":", ""));
           const timeB = parseInt(b.replace(":", ""));
           return timeA - timeB;
-        });
-      // convert back to AM and PM format
-      fetchedSchedule.mainlandDepartures =
-        fetchedSchedule.mainlandDepartures.map((time) => {
-          let [hours, minutes] = time.split(":");
-          if (hours > 12) {
-            hours = hours - 12;
-            return `${hours}:${minutes}PM`;
-          } else if (hours == 12) {
-            return `${hours}:${minutes}PM`;
-          } else {
-            return `${hours}:${minutes}AM`;
-          }
-        });
+        })
+        .map((time) => formatTime(time)); // Format back to AM/PM
+
+      function formatTime(time) {
+        let [hours, minutes] = time.split(":");
+        hours = parseInt(hours);
+        if (hours > 12) {
+          return `${hours - 12}:${minutes}PM`;
+        } else if (hours === 12) {
+          return `${hours}:${minutes}PM`;
+        } else if (hours === 0) {
+          return `12:${minutes}AM`;
+        } else {
+          return `${hours}:${minutes}AM`;
+        }
+      }
 
       console.log(
         "function and sorted Mainland Departures:",
         fetchedSchedule.mainlandDepartures
       );
 
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
-        (time) => convertTo24Hour(time)
-      );
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.sort(
-        (a, b) => {
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
+      //   (time) => convertTo24Hour(time)
+      // );
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.sort(
+      //   (a, b) => {
+      //     const timeA = parseInt(a.replace(":", ""));
+      //     const timeB = parseInt(b.replace(":", ""));
+      //     return timeA - timeB;
+      //   }
+      // );
+      // fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
+      //   (time) => {
+      //     let [hours, minutes] = time.split(":");
+      //     if (hours > 12) {
+      //       hours = hours - 12;
+      //       return `${hours}:${minutes}PM`;
+      //     } else if (hours == 12) {
+      //       return `${hours}:${minutes}PM`;
+      //     } else {
+      //       return `${hours}:${minutes}AM`;
+      //     }
+      //   }
+      // );
+
+      // Process islandDepartures after the changes for mainlandDepartures
+      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures
+        .map((time) => convertTo24Hour(time))
+        .filter((time) => time !== null && time.includes(":")) // Ensure valid times
+        .sort((a, b) => {
           const timeA = parseInt(a.replace(":", ""));
           const timeB = parseInt(b.replace(":", ""));
           return timeA - timeB;
-        }
-      );
-      fetchedSchedule.islandDepartures = fetchedSchedule.islandDepartures.map(
-        (time) => {
-          let [hours, minutes] = time.split(":");
-          if (hours > 12) {
-            hours = hours - 12;
-            return `${hours}:${minutes}PM`;
-          } else if (hours == 12) {
-            return `${hours}:${minutes}PM`;
-          } else {
-            return `${hours}:${minutes}AM`;
-          }
-        }
-      );
+        })
+        .map((time) => formatTime(time)); // Format back to AM/PM
 
       console.log(
         "function and sorted Island Departures:",
@@ -427,7 +460,6 @@ export default function GetSchedule() {
               {formatDate(date)}
             </Text>
           </TouchableOpacity>
-
           {schedule && (
             <>
               <View style={{ flexDirection: "row", marginVertical: 10 }}>
@@ -483,6 +515,6 @@ export default function GetSchedule() {
         </>
       )}
     </View>
-);
+  );
+}
 
-                  }

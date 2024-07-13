@@ -32,7 +32,7 @@ const LowTides = () => {
         <TouchableOpacity
           onPress={() =>
             openURL(
-              "http://herronisland.org/home/sked/2023%20ferry%20cancellations%20and%20reschedules.pdf"
+              "https://www.hmchi.org/file/document/3715548852/SnAZB58vLCpncqHH.pdf"
             )
           }
         >
@@ -48,7 +48,7 @@ const LowTides = () => {
                 { color: theme.colors.primary, marginLeft: 5 },
               ]}
             >
-              2023 Ferry Cancellations/Reschedules PDF
+              2024 Ferry Cancellations/Reschedules PDF
             </Text>
           </View>
         </TouchableOpacity>
