@@ -18,3 +18,37 @@ type LowTide @model {
   rescheduleMainland: [String] # e.g., ["1:00PM"]
   rescheduleIsland: [String] # e.g., ["12:30PM"]
 }
+
+type Product @model {
+  id: ID!
+  name: String!
+  type: String!
+  price: Float!
+  stock: Int!
+  description: String
+  imageUrl: String
+  sizes: [SizeInventory!]!
+}
+
+type SizeInventory {
+  size: String!
+  stock: Int!
+}
+
+type Transaction @model {
+  id: ID!
+  userEmail: String!
+  amount: Float!
+  items: [TransactionItem!]!
+  paymentStatus: String!
+  paymentId: String
+  last4: String!
+  createdAt: AWSDateTime!
+}
+
+type TransactionItem {
+  productId: ID!
+  productName: String!
+  quantity: Int!
+  price: Float!
+}

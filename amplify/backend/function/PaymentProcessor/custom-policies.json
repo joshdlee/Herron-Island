@@ -1,0 +1,13 @@
+[
+  {
+    "Effect": "Allow",
+    "Action": [
+      "ses:SendEmail",
+      "ses:SendRawEmail"
+    ],
+    "Resource": [
+      "arn:aws:ses:us-east-1:994216198967:identity/herronisland.app",
+      "arn:aws:ses:us-east-1:994216198967:identity/x@joshdlee.com"
+    ]
+  }
+]

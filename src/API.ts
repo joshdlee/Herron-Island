@@ -2,25 +2,20 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateDayScheduleInput = {
-  id?: string | null,
-  type: string,
-  day: string,
-  mainlandDepartures: Array< string | null >,
-  islandDepartures: Array< string | null >,
-};
-
-export type ModelDayScheduleConditionInput = {
+export type ModelProductFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
   type?: ModelStringInput | null,
-  day?: ModelStringInput | null,
-  mainlandDepartures?: ModelStringInput | null,
-  islandDepartures?: ModelStringInput | null,
-  and?: Array< ModelDayScheduleConditionInput | null > | null,
-  or?: Array< ModelDayScheduleConditionInput | null > | null,
-  not?: ModelDayScheduleConditionInput | null,
+  price?: ModelFloatInput | null,
+  stock?: ModelIntInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  and?: Array< ModelProductFilterInput | null > | null,
+  or?: Array< ModelProductFilterInput | null > | null,
+  not?: ModelProductFilterInput | null,
 };
 
-export type ModelStringInput = {
+export type ModelIDInput = {
   ne?: string | null,
   eq?: string | null,
   le?: string | null,
@@ -58,6 +53,90 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
+};
+
+export type ModelStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelProductConnection = {
+  __typename: "ModelProductConnection",
+  items:  Array<Product | null >,
+  nextToken?: string | null,
+};
+
+export type Product = {
+  __typename: "Product",
+  id: string,
+  name: string,
+  type: string,
+  price: number,
+  stock: number,
+  description?: string | null,
+  imageUrl?: string | null,
+  sizes:  Array<SizeInventory >,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type SizeInventory = {
+  __typename: "SizeInventory",
+  size: string,
+  stock: number,
+};
+
+export type CreateDayScheduleInput = {
+  id?: string | null,
+  type: string,
+  day: string,
+  mainlandDepartures: Array< string | null >,
+  islandDepartures: Array< string | null >,
+};
+
+export type ModelDayScheduleConditionInput = {
+  type?: ModelStringInput | null,
+  day?: ModelStringInput | null,
+  mainlandDepartures?: ModelStringInput | null,
+  islandDepartures?: ModelStringInput | null,
+  and?: Array< ModelDayScheduleConditionInput | null > | null,
+  or?: Array< ModelDayScheduleConditionInput | null > | null,
+  not?: ModelDayScheduleConditionInput | null,
 };
 
 export type DaySchedule = {
@@ -128,6 +207,115 @@ export type DeleteLowTideInput = {
   id: string,
 };
 
+export type CreateProductInput = {
+  id?: string | null,
+  name: string,
+  type: string,
+  price: number,
+  stock: number,
+  description?: string | null,
+  imageUrl?: string | null,
+  sizes: Array< SizeInventoryInput >,
+};
+
+export type SizeInventoryInput = {
+  size: string,
+  stock: number,
+};
+
+export type ModelProductConditionInput = {
+  name?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
+  stock?: ModelIntInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  and?: Array< ModelProductConditionInput | null > | null,
+  or?: Array< ModelProductConditionInput | null > | null,
+  not?: ModelProductConditionInput | null,
+};
+
+export type UpdateProductInput = {
+  id: string,
+  name?: string | null,
+  type?: string | null,
+  price?: number | null,
+  stock?: number | null,
+  description?: string | null,
+  imageUrl?: string | null,
+  sizes?: Array< SizeInventoryInput > | null,
+};
+
+export type DeleteProductInput = {
+  id: string,
+};
+
+export type CreateTransactionInput = {
+  id?: string | null,
+  userEmail: string,
+  amount: number,
+  items: Array< TransactionItemInput >,
+  paymentStatus: string,
+  paymentId?: string | null,
+  last4: string,
+  createdAt?: string | null,
+};
+
+export type TransactionItemInput = {
+  productId: string,
+  productName: string,
+  quantity: number,
+  price: number,
+};
+
+export type ModelTransactionConditionInput = {
+  userEmail?: ModelStringInput | null,
+  amount?: ModelFloatInput | null,
+  paymentStatus?: ModelStringInput | null,
+  paymentId?: ModelStringInput | null,
+  last4?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  and?: Array< ModelTransactionConditionInput | null > | null,
+  or?: Array< ModelTransactionConditionInput | null > | null,
+  not?: ModelTransactionConditionInput | null,
+};
+
+export type Transaction = {
+  __typename: "Transaction",
+  id: string,
+  userEmail: string,
+  amount: number,
+  items:  Array<TransactionItem >,
+  paymentStatus: string,
+  paymentId?: string | null,
+  last4: string,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type TransactionItem = {
+  __typename: "TransactionItem",
+  productId: string,
+  productName: string,
+  quantity: number,
+  price: number,
+};
+
+export type UpdateTransactionInput = {
+  id: string,
+  userEmail?: string | null,
+  amount?: number | null,
+  items?: Array< TransactionItemInput > | null,
+  paymentStatus?: string | null,
+  paymentId?: string | null,
+  last4?: string | null,
+  createdAt?: string | null,
+};
+
+export type DeleteTransactionInput = {
+  id: string,
+};
+
 export type ModelDayScheduleFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelStringInput | null,
@@ -137,22 +325,6 @@ export type ModelDayScheduleFilterInput = {
   and?: Array< ModelDayScheduleFilterInput | null > | null,
   or?: Array< ModelDayScheduleFilterInput | null > | null,
   not?: ModelDayScheduleFilterInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type ModelDayScheduleConnection = {
@@ -176,6 +348,25 @@ export type ModelLowTideFilterInput = {
 export type ModelLowTideConnection = {
   __typename: "ModelLowTideConnection",
   items:  Array<LowTide | null >,
+  nextToken?: string | null,
+};
+
+export type ModelTransactionFilterInput = {
+  id?: ModelIDInput | null,
+  userEmail?: ModelStringInput | null,
+  amount?: ModelFloatInput | null,
+  paymentStatus?: ModelStringInput | null,
+  paymentId?: ModelStringInput | null,
+  last4?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  and?: Array< ModelTransactionFilterInput | null > | null,
+  or?: Array< ModelTransactionFilterInput | null > | null,
+  not?: ModelTransactionFilterInput | null,
+};
+
+export type ModelTransactionConnection = {
+  __typename: "ModelTransactionConnection",
+  items:  Array<Transaction | null >,
   nextToken?: string | null,
 };
 
@@ -228,6 +419,84 @@ export type ModelSubscriptionLowTideFilterInput = {
   rescheduleIsland?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionLowTideFilterInput | null > | null,
   or?: Array< ModelSubscriptionLowTideFilterInput | null > | null,
+};
+
+export type ModelSubscriptionProductFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionFloatInput | null,
+  stock?: ModelSubscriptionIntInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  imageUrl?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
+};
+
+export type ModelSubscriptionFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionTransactionFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userEmail?: ModelSubscriptionStringInput | null,
+  amount?: ModelSubscriptionFloatInput | null,
+  paymentStatus?: ModelSubscriptionStringInput | null,
+  paymentId?: ModelSubscriptionStringInput | null,
+  last4?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionTransactionFilterInput | null > | null,
+  or?: Array< ModelSubscriptionTransactionFilterInput | null > | null,
+};
+
+export type ListProductsWithSizesQueryVariables = {
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListProductsWithSizesQuery = {
+  listProducts?:  {
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
+      id: string,
+      name: string,
+      type: string,
+      price: number,
+      stock: number,
+      description?: string | null,
+      imageUrl?: string | null,
+      sizes:  Array< {
+        __typename: "SizeInventory",
+        size: string,
+        stock: number,
+      } >,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
 };
 
 export type CreateDayScheduleMutationVariables = {
@@ -341,6 +610,159 @@ export type DeleteLowTideMutation = {
   } | null,
 };
 
+export type CreateProductMutationVariables = {
+  input: CreateProductInput,
+  condition?: ModelProductConditionInput | null,
+};
+
+export type CreateProductMutation = {
+  createProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateProductMutationVariables = {
+  input: UpdateProductInput,
+  condition?: ModelProductConditionInput | null,
+};
+
+export type UpdateProductMutation = {
+  updateProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteProductMutationVariables = {
+  input: DeleteProductInput,
+  condition?: ModelProductConditionInput | null,
+};
+
+export type DeleteProductMutation = {
+  deleteProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateTransactionMutationVariables = {
+  input: CreateTransactionInput,
+  condition?: ModelTransactionConditionInput | null,
+};
+
+export type CreateTransactionMutation = {
+  createTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateTransactionMutationVariables = {
+  input: UpdateTransactionInput,
+  condition?: ModelTransactionConditionInput | null,
+};
+
+export type UpdateTransactionMutation = {
+  updateTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteTransactionMutationVariables = {
+  input: DeleteTransactionInput,
+  condition?: ModelTransactionConditionInput | null,
+};
+
+export type DeleteTransactionMutation = {
+  deleteTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetDayScheduleQueryVariables = {
   id: string,
 };
@@ -416,6 +838,104 @@ export type ListLowTidesQuery = {
       cancelIsland?: Array< string | null > | null,
       rescheduleMainland?: Array< string | null > | null,
       rescheduleIsland?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetProductQueryVariables = {
+  id: string,
+};
+
+export type GetProductQuery = {
+  getProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListProductsQueryVariables = {
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListProductsQuery = {
+  listProducts?:  {
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
+      id: string,
+      name: string,
+      type: string,
+      price: number,
+      stock: number,
+      description?: string | null,
+      imageUrl?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetTransactionQueryVariables = {
+  id: string,
+};
+
+export type GetTransactionQuery = {
+  getTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListTransactionsQueryVariables = {
+  filter?: ModelTransactionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTransactionsQuery = {
+  listTransactions?:  {
+    __typename: "ModelTransactionConnection",
+    items:  Array< {
+      __typename: "Transaction",
+      id: string,
+      userEmail: string,
+      amount: number,
+      paymentStatus: string,
+      paymentId?: string | null,
+      last4: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -523,6 +1043,153 @@ export type OnDeleteLowTideSubscription = {
     cancelIsland?: Array< string | null > | null,
     rescheduleMainland?: Array< string | null > | null,
     rescheduleIsland?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
+};
+
+export type OnCreateProductSubscription = {
+  onCreateProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
+};
+
+export type OnUpdateProductSubscription = {
+  onUpdateProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
+};
+
+export type OnDeleteProductSubscription = {
+  onDeleteProduct?:  {
+    __typename: "Product",
+    id: string,
+    name: string,
+    type: string,
+    price: number,
+    stock: number,
+    description?: string | null,
+    imageUrl?: string | null,
+    sizes:  Array< {
+      __typename: "SizeInventory",
+      size: string,
+      stock: number,
+    } >,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateTransactionSubscriptionVariables = {
+  filter?: ModelSubscriptionTransactionFilterInput | null,
+};
+
+export type OnCreateTransactionSubscription = {
+  onCreateTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateTransactionSubscriptionVariables = {
+  filter?: ModelSubscriptionTransactionFilterInput | null,
+};
+
+export type OnUpdateTransactionSubscription = {
+  onUpdateTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteTransactionSubscriptionVariables = {
+  filter?: ModelSubscriptionTransactionFilterInput | null,
+};
+
+export type OnDeleteTransactionSubscription = {
+  onDeleteTransaction?:  {
+    __typename: "Transaction",
+    id: string,
+    userEmail: string,
+    amount: number,
+    items:  Array< {
+      __typename: "TransactionItem",
+      productId: string,
+      productName: string,
+      quantity: number,
+      price: number,
+    } >,
+    paymentStatus: string,
+    paymentId?: string | null,
+    last4: string,
     createdAt: string,
     updatedAt: string,
   } | null,

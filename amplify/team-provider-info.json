@@ -13,10 +13,19 @@
     },
     "categories": {
       "api": {
-        "herronisland": {}
+        "herronisland": {},
+        "PaymentProcessorAPI": {}
       },
       "auth": {
         "herronisland22a9aa7b": {}
+      },
+      "function": {
+        "processTransaction": {},
+        "PaymentProcessor": {
+          "secretsPathAmplifyAppId": "d1qm9abx89tj1q",
+          "deploymentBucketName": "amplify-herronisland-dev-125350-deployment",
+          "s3Key": "amplify-builds/PaymentProcessor-3649765944465a773142-build.zip"
+        }
       }
     }
   }

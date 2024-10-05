@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/process-payment": {
+      "name": "/process-payment",
+      "lambdaFunction": "PaymentProcessor",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

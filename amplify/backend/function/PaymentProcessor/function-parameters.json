@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "storage": {
+      "Product:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "Transaction:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "squareApiToken"
+  ]
+}

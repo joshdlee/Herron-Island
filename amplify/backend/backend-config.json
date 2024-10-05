@@ -1,5 +1,19 @@
 {
   "api": {
+    "PaymentProcessorAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "PaymentProcessor"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "herronisland": {
       "dependsOn": [],
       "output": {
@@ -43,6 +57,48 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "PaymentProcessor": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "herronisland"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_PaymentProcessor_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "PaymentProcessor"
+        }
+      ]
+    },
+    "AMPLIFY_function_PaymentProcessor_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "PaymentProcessor"
+        }
+      ]
+    },
+    "AMPLIFY_function_PaymentProcessor_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "PaymentProcessor"
+        }
+      ]
     }
   }
 }

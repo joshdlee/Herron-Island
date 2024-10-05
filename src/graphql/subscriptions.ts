@@ -113,3 +113,150 @@ export const onDeleteLowTide = /* GraphQL */ `subscription OnDeleteLowTide($filt
   APITypes.OnDeleteLowTideSubscriptionVariables,
   APITypes.OnDeleteLowTideSubscription
 >;
+export const onCreateProduct = /* GraphQL */ `subscription OnCreateProduct($filter: ModelSubscriptionProductFilterInput) {
+  onCreateProduct(filter: $filter) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateProductSubscriptionVariables,
+  APITypes.OnCreateProductSubscription
+>;
+export const onUpdateProduct = /* GraphQL */ `subscription OnUpdateProduct($filter: ModelSubscriptionProductFilterInput) {
+  onUpdateProduct(filter: $filter) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateProductSubscriptionVariables,
+  APITypes.OnUpdateProductSubscription
+>;
+export const onDeleteProduct = /* GraphQL */ `subscription OnDeleteProduct($filter: ModelSubscriptionProductFilterInput) {
+  onDeleteProduct(filter: $filter) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteProductSubscriptionVariables,
+  APITypes.OnDeleteProductSubscription
+>;
+export const onCreateTransaction = /* GraphQL */ `subscription OnCreateTransaction(
+  $filter: ModelSubscriptionTransactionFilterInput
+) {
+  onCreateTransaction(filter: $filter) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateTransactionSubscriptionVariables,
+  APITypes.OnCreateTransactionSubscription
+>;
+export const onUpdateTransaction = /* GraphQL */ `subscription OnUpdateTransaction(
+  $filter: ModelSubscriptionTransactionFilterInput
+) {
+  onUpdateTransaction(filter: $filter) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateTransactionSubscriptionVariables,
+  APITypes.OnUpdateTransactionSubscription
+>;
+export const onDeleteTransaction = /* GraphQL */ `subscription OnDeleteTransaction(
+  $filter: ModelSubscriptionTransactionFilterInput
+) {
+  onDeleteTransaction(filter: $filter) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteTransactionSubscriptionVariables,
+  APITypes.OnDeleteTransactionSubscription
+>;

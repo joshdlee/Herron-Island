@@ -35,6 +35,8 @@ const lightTheme = {
     inverseSurface: "#000000",
     inversePrimary: "#1E90FF",
     backdrop: DefaultTheme.colors.backdrop,
+    text: "#000000",
+    secondaryText: "#666666",
   },
 };
 
@@ -73,6 +75,8 @@ const darkTheme = {
     inverseSurface: "#000000",
     inversePrimary: "#1E90FF",
     backdrop: DefaultTheme.colors.backdrop,
+    text: "#FFFFFF",
+    secondaryText: "#CCCCCC",
   },
 };
 
