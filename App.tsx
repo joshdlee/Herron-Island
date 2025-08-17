@@ -13,6 +13,7 @@ import { useState } from 'react';
 import {Amplify, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 
+console.log('AWS Config API Key:', awsconfig.aws_appsync_apiKey);
 
 Amplify.configure(awsconfig);
 

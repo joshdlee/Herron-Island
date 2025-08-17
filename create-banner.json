@@ -1,0 +1,21 @@
+{
+  "Banner-3ppdeqlkxzalbhfay3vvc5nqri-dev": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": {"S": "active"},
+          "message": {"S": "🚢 We are testing the new Prototype Schedule Aug 11 - Oct 5. Please provide feedback to the Island Manager."},
+          "severity": {"S": "info"},
+          "backgroundColor": {"S": "#2196F3"},
+          "textColor": {"S": "#FFFFFF"},
+          "isActive": {"BOOL": true},
+          "startDate": {"S": "2025-08-11"},
+          "endDate": {"S": "2025-10-05"},
+          "priority": {"N": "1"},
+          "createdAt": {"S": "2025-08-16T00:00:00.000Z"},
+          "updatedAt": {"S": "2025-08-16T00:00:00.000Z"}
+        }
+      }
+    }
+  ]
+}

@@ -7,7 +7,8 @@ import SummerFerrySchedule from "./Summer";
 import WinterFerrySchedule from "./Winter";
 import LowTides from "./LowTides";
 import HolidaySchedule from "./Holiday";
-import GetSchedule from "./GetSchedule";
+import GetSchedule from "./GetScheduleV2";
+import GetPrototype from "./GetPrototype";
 import GetSummer from "./GetSummer";
 import GetWinter from "./GetWinter";
 import GetCancellations from "./GetCancellations";
@@ -23,6 +24,8 @@ export default function FerryTab() {
     switch (activeComponent) {
       case "Today":
         return <GetSchedule />;
+      case "Prototype":
+        return <GetPrototype />;
       case "Summer":
         return <GetSummer />;
       case "Winter":
@@ -31,10 +34,10 @@ export default function FerryTab() {
         return <GetCancellations />;
       case "Holidays":
         return <GetHoliday />;
-      case "Admin":
-        return <AdminScreen onLoginSuccess={() => setActiveComponent('AdminTab')} />;
-      case "AdminTab":
-        return <AdminTab />;
+      // case "Admin":
+      //   return <AdminScreen onLoginSuccess={() => setActiveComponent('AdminTab')} />;
+      // case "AdminTab":
+      //   return <AdminTab />;
       default:
         return null;
     }
@@ -76,11 +79,12 @@ export default function FerryTab() {
     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
   >
     {renderButton("Today", "calendar-today")}
+    {renderButton("Prototype", "test-tube")}
     {renderButton("Summer", "weather-sunny")}
     {renderButton("Winter", "weather-snowy")}
     {renderButton("Low Tides", "waves")}
     {renderButton("Holidays", "calendar-star")}
-    {renderButton("Admin", "account-cog")}
+    {/* {renderButton("Admin", "account-cog")} */}
   </ScrollView>
 </View>
       <View style={styles.componentContainer}>{renderComponent()}</View>
@@ -99,19 +103,19 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   scrollContainer: {
-    height: 50,  // Adjust this height if necessary
+    height: 40,  // Reduced from 50 to 40
     width: '100%',
   },
   buttonContainer: {
     flexDirection: "row",
-    marginVertical: 5,  // Reduce this or set to 0 if needed
+    marginVertical: 2,  // Reduced from 5 to 2
     width: "100%",
   },
   iconButton: {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    paddingVertical: 10,
+    paddingVertical: 8,  // Reduced from 10 to 8
     paddingHorizontal: 20,
     width: screenWidth / 4 - 20,
   },

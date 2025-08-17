@@ -3,8 +3,9 @@
     "userInterfaceStyle": "light",
     "name": "Herron Island",
     "slug": "herron-island",
-    "version": "2.2.4",
+    "version": "2.2.7",
     "orientation": "portrait",
+    "newArchEnabled": true,
     "icon": "./AppStore.png",
     "splash": {
       "image": "./assets/Herron-Island-Teal.png",
@@ -18,13 +19,13 @@
       "userInterfaceStyle": "automatic"
     },
     "android": {
-      "versionCode": 26,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "automatic",
-      "package": "com.joshdlee.herronisland"
+      "package": "com.xjoshdlee.herronislandapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

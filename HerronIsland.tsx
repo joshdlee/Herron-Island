@@ -125,7 +125,7 @@ const HerronIsland = () => {
           <Text style={[styles(theme).link, { color: theme.colors.primary }]}>Get directions to Herron Island Ferry Dock</Text>
         </TouchableOpacity>
         <Divider style={{ marginVertical: 16 }} />
-        <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>2023/2024 Ferry Fees</Text>
+        <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Ferry Fees</Text>
         
         <View style={styles(theme).table}>
           {/* Table Header */}

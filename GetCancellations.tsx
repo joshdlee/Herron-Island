@@ -129,10 +129,10 @@ useEffect(() => {
     async function fetchData() {
         const allTideItems = await fetchAllLowTides();
 
-        // Filter for the year 2024 and sort the data
+        // Filter for the year 2025 and sort the data
         const tideItems = allTideItems.filter(tide => {
             const year = tide.date.split("-")[2]; // Assumes the date format is MM-DD-YYYY
-            return year === "2024";
+            return year === "2025";
         });
 
         // Sort the filtered data by date
@@ -190,7 +190,7 @@ useEffect(() => {
           <TouchableOpacity
             onPress={() =>
               openURL(
-                "https://www.hmchi.org/file/document/3715548852/SnAZB58vLCpncqHH.pdf"
+                "https://www.hmchi.org/file/document/3715548852/2XjhVU7iyhYeBZqq.pdf"
               )
             }
           >
@@ -201,7 +201,7 @@ useEffect(() => {
                 color={theme.colors.primary}
               />
               <Text style={{ color: theme.colors.primary, marginLeft: 5 }}>
-                2024 Ferry Cancellations/Reschedules PDF
+                2025 Ferry Cancellations/Reschedules PDF
               </Text>
             </View>
           </TouchableOpacity>

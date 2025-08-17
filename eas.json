@@ -17,8 +17,12 @@
       }
     },
     "production": {
+      "node": "18.18.0",
       "ios": {
         "resourceClass": "m-medium"
+      },
+      "env": {
+        "npm_config_legacy_peer_deps": "true"
       }
     }
   },

@@ -125,3 +125,231 @@ export const deleteLowTide = /* GraphQL */ `mutation DeleteLowTide(
   APITypes.DeleteLowTideMutationVariables,
   APITypes.DeleteLowTideMutation
 >;
+export const createProduct = /* GraphQL */ `mutation CreateProduct(
+  $input: CreateProductInput!
+  $condition: ModelProductConditionInput
+) {
+  createProduct(input: $input, condition: $condition) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateProductMutationVariables,
+  APITypes.CreateProductMutation
+>;
+export const updateProduct = /* GraphQL */ `mutation UpdateProduct(
+  $input: UpdateProductInput!
+  $condition: ModelProductConditionInput
+) {
+  updateProduct(input: $input, condition: $condition) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateProductMutationVariables,
+  APITypes.UpdateProductMutation
+>;
+export const deleteProduct = /* GraphQL */ `mutation DeleteProduct(
+  $input: DeleteProductInput!
+  $condition: ModelProductConditionInput
+) {
+  deleteProduct(input: $input, condition: $condition) {
+    id
+    name
+    type
+    price
+    stock
+    description
+    imageUrl
+    sizes {
+      size
+      stock
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteProductMutationVariables,
+  APITypes.DeleteProductMutation
+>;
+export const createTransaction = /* GraphQL */ `mutation CreateTransaction(
+  $input: CreateTransactionInput!
+  $condition: ModelTransactionConditionInput
+) {
+  createTransaction(input: $input, condition: $condition) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateTransactionMutationVariables,
+  APITypes.CreateTransactionMutation
+>;
+export const updateTransaction = /* GraphQL */ `mutation UpdateTransaction(
+  $input: UpdateTransactionInput!
+  $condition: ModelTransactionConditionInput
+) {
+  updateTransaction(input: $input, condition: $condition) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateTransactionMutationVariables,
+  APITypes.UpdateTransactionMutation
+>;
+export const deleteTransaction = /* GraphQL */ `mutation DeleteTransaction(
+  $input: DeleteTransactionInput!
+  $condition: ModelTransactionConditionInput
+) {
+  deleteTransaction(input: $input, condition: $condition) {
+    id
+    userEmail
+    amount
+    items {
+      productId
+      productName
+      quantity
+      price
+      __typename
+    }
+    paymentStatus
+    paymentId
+    last4
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteTransactionMutationVariables,
+  APITypes.DeleteTransactionMutation
+>;
+export const createBanner = /* GraphQL */ `mutation CreateBanner(
+  $input: CreateBannerInput!
+  $condition: ModelBannerConditionInput
+) {
+  createBanner(input: $input, condition: $condition) {
+    id
+    message
+    severity
+    backgroundColor
+    textColor
+    isActive
+    startDate
+    endDate
+    priority
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateBannerMutationVariables,
+  APITypes.CreateBannerMutation
+>;
+export const updateBanner = /* GraphQL */ `mutation UpdateBanner(
+  $input: UpdateBannerInput!
+  $condition: ModelBannerConditionInput
+) {
+  updateBanner(input: $input, condition: $condition) {
+    id
+    message
+    severity
+    backgroundColor
+    textColor
+    isActive
+    startDate
+    endDate
+    priority
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateBannerMutationVariables,
+  APITypes.UpdateBannerMutation
+>;
+export const deleteBanner = /* GraphQL */ `mutation DeleteBanner(
+  $input: DeleteBannerInput!
+  $condition: ModelBannerConditionInput
+) {
+  deleteBanner(input: $input, condition: $condition) {
+    id
+    message
+    severity
+    backgroundColor
+    textColor
+    isActive
+    startDate
+    endDate
+    priority
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteBannerMutationVariables,
+  APITypes.DeleteBannerMutation
+>;

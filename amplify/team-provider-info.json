@@ -16,7 +16,10 @@
         "herronisland": {}
       },
       "auth": {
-        "herronisland22a9aa7b": {}
+        "herronislandcfec65e8": {}
+      },
+      "function": {
+        "PaymentProcessor": {}
       }
     }
   }
