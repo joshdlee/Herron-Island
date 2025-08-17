@@ -12,6 +12,8 @@ import tideDataFetcher from "./tideDataFetcher";
 import { useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import SimpleGlass from './SimpleGlass';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const isWeb = Platform.OS === "web";
 
@@ -144,22 +146,10 @@ const TideChart: React.FC = () => {
     },
     row: {
       flexDirection: "row",
-      borderBottomWidth: 1,
-      borderColor: theme.colors.primary,
       color: theme.colors.onSurface,
-      shadowColor: theme.colors.secondary,
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
     header: {
-      backgroundColor: theme.colors.surface,
       color: theme.colors.onSurface,
-      fontWeight: "extra-bold",
     },
     cell: {
       padding: 8,
@@ -180,41 +170,60 @@ const TideChart: React.FC = () => {
     },
   });
 
-  const CustomTable = ({ data }) => {
+  const CustomTable = ({ data }: { data: ProcessedDataPoint[] }) => {
     return (
       <View style={styles.container}>
-        <View style={[styles.row, styles.header]}>
-          <Text style={[styles.cell, styles.text, { flex: 1 }]}>
-            Date & Time
-          </Text>
-          <Text style={[styles.cell, styles.text, { flex: 0.5 }]} align="right">
-            Height (ft)
-          </Text>
-        </View>
-        {data.map((row, index) => (
-          <View key={index} style={styles.row}>
-            <Text style={[styles.cell, styles.text, { flex: 1 }]}>
-              {new Date(row.x).toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+        <SimpleGlass
+          style={{
+            marginHorizontal: 10,
+            marginTop: 10,
+            marginBottom: 5,
+          }}
+          borderRadius={8}
+          theme={theme}
+        >
+          <View style={styles.row}>
+            <Text style={[styles.cell, styles.text, { flex: 1, fontWeight: 'bold' }]}>
+              Date & Time
             </Text>
-            <Text
-              style={[styles.cell, styles.text, { flex: 0.5 }]}
-              align="right"
-            >
-              {row.y.toFixed(2)}
+            <Text style={[styles.cell, styles.text, { flex: 0.5, fontWeight: 'bold', textAlign: 'right' }]}>
+              Height (ft)
             </Text>
           </View>
+        </SimpleGlass>
+        {data.map((row: ProcessedDataPoint, index: number) => (
+          <SimpleGlass
+            key={index}
+            style={{
+              marginHorizontal: 10,
+              marginVertical: 2,
+            }}
+            borderRadius={6}
+            theme={theme}
+          >
+            <View style={styles.row}>
+              <Text style={[styles.cell, styles.text, { flex: 1 }]}>
+                {new Date(row.x).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </Text>
+              <Text
+                style={[styles.cell, styles.text, { flex: 0.5, textAlign: 'right' }]}
+              >
+                {row.y.toFixed(2)}
+              </Text>
+            </View>
+          </SimpleGlass>
         ))}
       </View>
     );
   };
 
-  const findCurrentTideHeight = (data, currentTime) => {
+  const findCurrentTideHeight = (data: ProcessedDataPoint[], currentTime: Date) => {
     if (!data || data.length === 0) {
       return null;
     }
@@ -251,6 +260,47 @@ const TideChart: React.FC = () => {
 
   const currentTideHeight = findCurrentTideHeight(processedData, currentTime);
   console.log("CurrentTideHeight:", currentTideHeight);
+  
+  // Calculate tide rate (inches per 15 minutes) using actual data points
+  const calculateTideRate = (data: ProcessedDataPoint[], currentTime: Date) => {
+    if (!data || data.length < 2) return null;
+    
+    // Find the closest data points before and after current time
+    let beforePoint = null;
+    let afterPoint = null;
+    
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i].x <= currentTime && data[i + 1].x > currentTime) {
+        beforePoint = data[i];
+        afterPoint = data[i + 1];
+        break;
+      }
+    }
+    
+    if (!beforePoint || !afterPoint) {
+      // If we're at the edge of data, use the last two points
+      if (data.length >= 2) {
+        beforePoint = data[data.length - 2];
+        afterPoint = data[data.length - 1];
+      } else {
+        return null;
+      }
+    }
+    
+    // Calculate the rate of change between these two actual data points
+    const timeDiffMs = afterPoint.x.getTime() - beforePoint.x.getTime();
+    const timeDiffMinutes = timeDiffMs / (1000 * 60);
+    const heightDiffFeet = afterPoint.y - beforePoint.y;
+    
+    // Calculate rate per minute, then scale to 15 minutes
+    const ratePerMinute = heightDiffFeet / timeDiffMinutes;
+    const ratePer15Min = ratePerMinute * 15;
+    const rateInInches = ratePer15Min * 12; // Convert feet to inches
+    
+    return rateInInches;
+  };
+  
+  const tideRate = calculateTideRate(processedData, currentTime);
 
   const interpolation = "monotoneX";
 
@@ -277,6 +327,97 @@ const TideChart: React.FC = () => {
         }}
       >
         <View style={{ flexDirection: "column" }}>
+          {/* Tide Info Header */}
+          <SimpleGlass
+            style={{
+              marginHorizontal: 10,
+              marginTop: 10,
+              marginBottom: 10,
+              padding: 15,
+            }}
+            borderRadius={12}
+            theme={theme}
+          >
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ 
+                fontSize: 18, 
+                fontWeight: 'bold',
+                color: theme.colors.onBackground,
+                marginBottom: 8
+              }}>
+                NOAA Tide Predictions - Herron Island
+              </Text>
+              {currentTideHeight !== null && (
+                <>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <Text style={{ 
+                      fontSize: 16,
+                      color: theme.colors.onBackground 
+                    }}>
+                      Current Tide:
+                    </Text>
+                    <Text style={{ 
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: theme.colors.primary 
+                    }}>
+                      {currentTideHeight.toFixed(2)} ft
+                    </Text>
+                    <Text style={{ 
+                      fontSize: 14,
+                      color: theme.colors.onBackground,
+                      opacity: 0.7
+                    }}>
+                      {currentTime.toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </Text>
+                  </View>
+                  {tideRate !== null && (
+                    <View style={{ 
+                      flexDirection: 'row', 
+                      alignItems: 'center', 
+                      marginTop: 8,
+                      paddingTop: 8,
+                      borderTopWidth: 1,
+                      borderTopColor: theme.colors.outline,
+                      gap: 10 
+                    }}>
+                      <MaterialCommunityIcons 
+                        name={tideRate > 0 ? "trending-up" : "trending-down"} 
+                        size={20} 
+                        color={tideRate > 0 ? '#4CAF50' : '#FF5722'} 
+                      />
+                      <Text style={{ 
+                        fontSize: 15,
+                        color: theme.colors.onBackground 
+                      }}>
+                        Tide Rate:
+                      </Text>
+                      <Text style={{ 
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: tideRate > 0 ? '#4CAF50' : '#FF5722'
+                      }}>
+                        {tideRate > 0 ? '+' : ''}{tideRate.toFixed(1)} inches/15min
+                      </Text>
+                      <Text style={{ 
+                        fontSize: 13,
+                        color: theme.colors.onBackground,
+                        opacity: 0.6,
+                        fontStyle: 'italic'
+                      }}>
+                        ({tideRate > 0 ? 'Rising' : 'Falling'})
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+          </SimpleGlass>
+          
           <CustomScrollView
             horizontal
             contentContainerStyle={{
@@ -289,6 +430,11 @@ const TideChart: React.FC = () => {
               domain={{ y: [paddedMinY, paddedMaxY] }}
               padding={chartPadding}
               width={screenWidth * 3}
+              style={{
+                background: {
+                  fill: "transparent"
+                }
+              }}
               containerComponent={
                 <VictoryVoronoiContainer
                   customEvents={() => [
@@ -336,6 +482,10 @@ const TideChart: React.FC = () => {
                 style={{
                   data: {
                     fill: theme.colors.primary,
+                    fillOpacity: theme.dark ? 0.25 : 0.15,
+                    stroke: theme.colors.primary,
+                    strokeWidth: 2,
+                    strokeOpacity: 0.8,
                   },
                 }}
                 interpolation={interpolation}
@@ -370,7 +520,13 @@ const TideChart: React.FC = () => {
               <VictoryLine
                 data={processedData}
                 style={{
-                  data: { stroke: theme.colors.onBackground },
+                  data: { 
+                    stroke: theme.colors.primary,
+                    strokeWidth: 3,
+                    strokeOpacity: 0.9,
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round"
+                  },
                 }}
                 interpolation={interpolation}
                 // animate={{
@@ -385,9 +541,17 @@ const TideChart: React.FC = () => {
               />
               <VictoryScatter
                 data={processedData}
-                size={5}
-                style={{ data: { fill: theme.colors.secondary } }}
-                labels={({ datum }) =>
+                size={6}
+                style={{ 
+                  data: { 
+                    fill: theme.colors.primary,
+                    fillOpacity: 0.6,
+                    stroke: theme.colors.primary,
+                    strokeWidth: 2,
+                    strokeOpacity: 0.8
+                  } 
+                }}
+                labels={({ datum }: { datum: ProcessedDataPoint }) =>
                   `Time: ${datum.x.toLocaleTimeString("en-US", {
                     hour: "numeric",
                     minute: "2-digit",
@@ -396,7 +560,7 @@ const TideChart: React.FC = () => {
                 }
                 labelComponent={
                   <VictoryTooltip
-                    active={(datum) => datum.x === currentTime}
+                    active={(datum: ProcessedDataPoint) => datum.x === currentTime}
                     style={{ fontSize: 12 }}
                   />
                 }

@@ -40,6 +40,7 @@
     "d3-shape": "^3.2.0",
     "dotenv": "^16.0.3",
     "expo": "^52.0.42",
+    "expo-blur": "^14.1.5",
     "expo-image-manipulator": "~13.0.6",
     "expo-linear-gradient": "~14.0.2",
     "expo-screen-orientation": "~8.0.4",

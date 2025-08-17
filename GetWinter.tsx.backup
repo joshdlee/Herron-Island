@@ -19,7 +19,7 @@ async function fetchSchedule(season, day) {
   return result.data?.listDaySchedules?.items[0] || null;
 }
 
-export default function GetPrototypeSchedules() {
+export default function GetSummerSchedules() {
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
   const daysOfWeek = [
@@ -38,12 +38,12 @@ export default function GetPrototypeSchedules() {
 
 const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchPrototypeSchedules();
+    await fetchSummerSchedules();
     setRefreshing(false);
 };
 
-  async function fetchPrototypeSchedules() {
-    const season = "prototype";
+  async function fetchSummerSchedules() {
+    const season = "summer";
     const fetchedSchedules = {};
   
     for (const day of daysOfWeek) {
@@ -123,8 +123,8 @@ const handleRefresh = async () => {
 
   const saveDataToLocalState = async (data) => {
     try {
-        await AsyncStorage.setItem('prototypeSchedules', JSON.stringify(data));
-        await AsyncStorage.setItem('prototypeLastUpdated', Date.now().toString()); // save the timestamp
+        await AsyncStorage.setItem('summerSchedules', JSON.stringify(data));
+        await AsyncStorage.setItem('lastUpdated', Date.now().toString()); // save the timestamp
     } catch (error) {
         console.error("Error saving data to local state:", error);
     }
@@ -133,21 +133,21 @@ const handleRefresh = async () => {
 
   const fetchDataFromLocalState = async () => {
     try {
-        const savedData = await AsyncStorage.getItem('prototypeSchedules');
-        const lastUpdated = await AsyncStorage.getItem('prototypeLastUpdated');
+        const savedData = await AsyncStorage.getItem('summerSchedules');
+        const lastUpdated = await AsyncStorage.getItem('lastUpdated');
 
         if (savedData !== null && lastUpdated !== null) {
             const timeElapsed = Date.now() - parseInt(lastUpdated);
             const oneDay = 24 * 60 * 60 * 1000; // in milliseconds
 
             if (timeElapsed > oneDay) {
-                fetchPrototypeSchedules(); // fetch new data if more than 24 hours old
+                fetchSummerSchedules(); // fetch new data if more than 24 hours old
             } else {
                 setSchedules(JSON.parse(savedData));
                 setLoading(false);
             }
         } else {
-            fetchPrototypeSchedules(); // if no data is found, fetch it
+            fetchSummerSchedules(); // if no data is found, fetch it
         }
     } catch (error) {
         console.error("Error fetching data from local state:", error);
@@ -174,34 +174,23 @@ const handleRefresh = async () => {
         </View>
       ) : ( // Otherwise, render your main content
         <>
-          <SimpleGlass
+          <Text
             style={{
+              fontWeight: "bold",
+              color: theme.colors.onBackground,
               marginBottom: 10,
-              padding: 12,
-              marginHorizontal: 20,
+              textAlign: "center",
             }}
-            borderRadius={12}
-            theme={theme}
           >
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: theme.colors.onBackground,
-                textAlign: "center",
-                fontSize: 16,
-              }}
-            >
-              Prototype Daily Schedules (August 11 - October 5)
-            </Text>
-          </SimpleGlass>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 5, paddingHorizontal: 10 }}>
+            Summer Daily Schedules (April 1 - September 30)
+          </Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
             <Text
               style={{
                 flex: 1,
                 textAlign: "center",
                 fontWeight: "bold",
                 color: theme.colors.onBackground,
-                fontSize: 14,
               }}
             >
               Island Departures
@@ -212,7 +201,6 @@ const handleRefresh = async () => {
                 textAlign: "center",
                 fontWeight: "bold",
                 color: theme.colors.onBackground,
-                fontSize: 14,
               }}
             >
               Mainland Departures
@@ -223,8 +211,8 @@ const handleRefresh = async () => {
     style={{ flex: 1 }}
     contentContainerStyle={{
         justifyContent: "center",
-        paddingHorizontal: 10,
-        paddingTop: 10,
+        padding: 20,
+        paddingTop: 50,
     }}
     refreshControl={
         <RefreshControl refreshing={refreshing}
@@ -236,26 +224,16 @@ const handleRefresh = async () => {
 >
             {daysOfWeek.map((day) => (
               <View key={day} style={{ alignItems: "center", width: '100%' }}>
-                <SimpleGlass
+                <Text
                   style={{
-                    marginBottom: 5,
-                    padding: 6,
-                    marginHorizontal: 10,
+                    fontWeight: "bold",
+                    color: theme.colors.onBackground,
+                    marginBottom: 10,
+                    textAlign: "center",
                   }}
-                  borderRadius={8}
-                  theme={theme}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: theme.colors.onBackground,
-                      textAlign: "center",
-                      fontSize: 14,
-                    }}
-                  >
-                    {`${day.charAt(0).toUpperCase() + day.slice(1)}`}
-                  </Text>
-                </SimpleGlass>
+                  {`${day.charAt(0).toUpperCase() + day.slice(1)}`}
+                </Text>
                 {schedules[day] &&
                   schedules[day].islandDepartures.map((time: any, index: any) => (
                     <View
@@ -331,3 +309,4 @@ const handleRefresh = async () => {
     </View>
   );
 }
+

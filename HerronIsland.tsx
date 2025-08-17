@@ -14,6 +14,7 @@ import {
 import { useTheme } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Switch, RadioButton, Divider } from "react-native-paper";
+import SimpleGlass from './SimpleGlass';
 // import app json for version number 
 import * as appJson from "./app.json";
 
@@ -113,35 +114,114 @@ const HerronIsland = () => {
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <View style={styles(theme).container}>
-        <Text style={[styles(theme).description, { color: theme.colors.onBackground }]}>Version: {version}</Text>
-        <Text style={[styles(theme).heading, { color: theme.colors.onBackground }]}>Herron Island Ferry Schedule</Text>
-        <Text style={[styles(theme).description, { color: theme.colors.onBackground }]}>
-          This application offers ferry schedule details for the Herron Island ferry, using information derived from the schedule published on herronisland.org. Please note that this application is not officially endorsed or supported by the Herron Management Company (HMC).
-        </Text>
-        <TouchableOpacity onPress={() => openURL("http://herronisland.org/")}>
-          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>Visit Herron Island Website</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={openMap}>
-          <Text style={[styles(theme).link, { color: theme.colors.primary }]}>Get directions to Herron Island Ferry Dock</Text>
-        </TouchableOpacity>
-        <Divider style={{ marginVertical: 16 }} />
-        <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground }]}>Ferry Fees</Text>
-        
-        <View style={styles(theme).table}>
-          {/* Table Header */}
-          <View style={styles(theme).headerRow}>
-            <Text style={[styles(theme).headerCell, { flex: 3 }]}>Description</Text>
-            <Text style={[styles(theme).headerCell, { flex: 1 }]}>Member</Text>
-            <Text style={[styles(theme).headerCell, { flex: 1 }]}>Other</Text>
+        <SimpleGlass
+          style={{ marginBottom: 20, padding: 20, width: '100%' }}
+          borderRadius={12}
+          theme={theme}
+        >
+          <View style={{ alignItems: 'center', marginBottom: 15 }}>
+            <MaterialCommunityIcons name="ferry" size={40} color={theme.colors.primary} />
+            <Text style={[styles(theme).heading, { color: theme.colors.onBackground, marginTop: 10, marginBottom: 0 }]}>Herron Island Ferry</Text>
           </View>
+          
+          <View style={{ 
+            backgroundColor: theme.dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', 
+            borderRadius: 8, 
+            padding: 12,
+            marginBottom: 15
+          }}>
+            <Text style={[styles(theme).description, { 
+              color: theme.colors.onBackground, 
+              marginBottom: 0,
+              fontSize: 14,
+              lineHeight: 20,
+              textAlign: 'center'
+            }]}>
+              Unofficial schedule app using data from herronisland.org
+            </Text>
+            <Text style={[styles(theme).description, { 
+              color: theme.colors.onBackground, 
+              opacity: 0.7,
+              marginBottom: 0,
+              marginTop: 5,
+              fontSize: 12,
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }]}>
+              Not endorsed by HMC
+            </Text>
+          </View>
+          
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <TouchableOpacity 
+              onPress={() => openURL("http://herronisland.org/")} 
+              style={{ 
+                alignItems: 'center', 
+                flex: 1,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginRight: 5
+              }}
+            >
+              <MaterialCommunityIcons name="web" size={24} color={theme.colors.primary} />
+              <Text style={[styles(theme).linkText, { color: theme.colors.primary, marginTop: 5 }]}>Official Website</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              onPress={openMap} 
+              style={{ 
+                alignItems: 'center', 
+                flex: 1,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginLeft: 5
+              }}
+            >
+              <MaterialCommunityIcons name="map-marker" size={24} color={theme.colors.primary} />
+              <Text style={[styles(theme).linkText, { color: theme.colors.primary, marginTop: 5 }]}>Ferry Dock</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <Text style={[styles(theme).versionText, { 
+            color: theme.colors.onBackground, 
+            opacity: 0.4, 
+            textAlign: 'center', 
+            marginTop: 15,
+            fontSize: 11
+          }]}>
+            v{version}
+          </Text>
+        </SimpleGlass>
+        <Text style={[styles(theme).subHeading, { color: theme.colors.onBackground, textAlign: 'center', marginBottom: 15, marginTop: 10 }]}>Ferry Fees</Text>
+        
+        <View style={{ width: '100%', paddingHorizontal: 10 }}>
+          {/* Table Header */}
+          <SimpleGlass
+            style={{ marginBottom: 5, width: '100%' }}
+            borderRadius={8}
+            theme={theme}
+          >
+            <View style={[styles(theme).headerRow, { backgroundColor: 'transparent' }]}>
+              <Text style={[styles(theme).headerCell, { flex: 3, color: theme.colors.onBackground, fontWeight: 'bold' }]}>Description</Text>
+              <Text style={[styles(theme).headerCell, { flex: 1, color: theme.colors.onBackground, fontWeight: 'bold' }]}>Member</Text>
+              <Text style={[styles(theme).headerCell, { flex: 1, color: theme.colors.onBackground, fontWeight: 'bold' }]}>Other</Text>
+            </View>
+          </SimpleGlass>
 
           {/* Table Rows */}
           {ferryFees.map((fee, index) => (
-            <View key={index} style={styles(theme).row}>
-              <Text style={[styles(theme).cell, { flex: 3 }]}>{fee.description || 'N/A'}</Text>
-              <Text style={[styles(theme).cell, { flex: 1 }]}>{fee.member || 'N/A'}</Text>
-              <Text style={[styles(theme).cell, { flex: 1 }]}>{fee.other || 'N/A'}</Text>
-            </View>
+            <SimpleGlass
+              key={index}
+              style={{ marginVertical: 2, width: '100%' }}
+              borderRadius={6}
+              theme={theme}
+            >
+              <View style={[styles(theme).row, { borderBottomWidth: 0 }]}>
+                <Text style={[styles(theme).cell, { flex: 3, fontSize: 13 }]}>{fee.description || 'N/A'}</Text>
+                <Text style={[styles(theme).cell, { flex: 1, fontWeight: 'bold' }]}>{fee.member || 'N/A'}</Text>
+                <Text style={[styles(theme).cell, { flex: 1, fontWeight: 'bold' }]}>{fee.other || 'N/A'}</Text>
+              </View>
+            </SimpleGlass>
           ))}
         </View>
       </View>
@@ -220,27 +300,27 @@ const styles = (theme) => {
       marginBottom: 8,
       color: theme.colors.primary,
     },
+    linkText: {
+      fontSize: 12,
+      marginTop: 4,
+    },
+    versionText: {
+      fontSize: 12,
+    },
     table: {
       width: '100%',
-      borderWidth: 1,
-      borderColor: '#ddd',
     },
     headerRow: {
       flexDirection: 'row',
-      backgroundColor: theme.colors.primary, // Assuming this is okay for both themes
-      padding: 8,
+      padding: 10,
     },
     headerCell: {
-      fontWeight: 'bold',
       textAlign: 'center',
       paddingHorizontal: 4,
-      color: '#fff', // Typically, a contrasting color to the background
     },
     row: {
       flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderColor: '#ddd',
-      padding: 8,
+      padding: 10,
     },
     cell: {
       textAlign: 'center',

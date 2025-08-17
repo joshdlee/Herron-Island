@@ -11,6 +11,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Card } from 'react-native-paper';
 import { Dimensions } from 'react-native';
 import { config } from './src/config';
+import BannerGlass from './BannerGlass';
+import SimpleGlass from './SimpleGlass';
 
 function getSeasonAndDay(date: Date) {
   const month = date.getMonth() + 1;
@@ -219,12 +221,11 @@ export default function GetScheduleV2() {
       color: theme.colors.onBackground,
     },
     timeBox: {
-      borderWidth: 1,
-      borderColor: theme.colors.primary,
-      borderRadius: 8,
-      padding: 12,
       margin: 2,
       width: '98%' as const,
+      minHeight: 50,
+      justifyContent: 'center' as const,
+      alignItems: 'center' as const,
     },
     timeText: {
       fontSize: 16,
@@ -438,26 +439,49 @@ export default function GetScheduleV2() {
         <View style={{ flex: 1, width: '100%' }}>
           {/* Banner Message */}
           {banner && (
-            <View style={{
-              backgroundColor: banner.backgroundColor || theme.colors.primary,
-              padding: 12,
-              marginHorizontal: 10,
-              marginTop: 10,
-              borderRadius: 8,
-              borderLeftWidth: 4,
-              borderLeftColor: banner.severity === 'warning' ? '#FF9800' : 
-                             banner.severity === 'error' ? '#F44336' : 
-                             banner.severity === 'success' ? '#4CAF50' : '#2196F3',
-            }}>
-              <Text style={{
-                color: banner.textColor || theme.colors.onPrimary,
-                fontSize: 14,
-                textAlign: 'center',
-                fontWeight: '500',
+            <BannerGlass
+              style={{
+                marginHorizontal: 10,
+                marginTop: 10,
+              }}
+              blurIntensity={15}
+              borderRadius={12}
+              elasticity={0.35}
+              displacementScale={10}
+              glassColor={
+                banner.severity === 'warning' ? 'rgba(255, 152, 0, 0.12)' : 
+                banner.severity === 'error' ? 'rgba(244, 67, 54, 0.12)' : 
+                banner.severity === 'success' ? 'rgba(76, 175, 80, 0.12)' : 
+                'rgba(33, 150, 243, 0.12)'
+              }
+              gradientColors={
+                banner.severity === 'warning' ? ['rgba(255, 152, 0, 0.25)', 'rgba(255, 152, 0, 0.08)'] : 
+                banner.severity === 'error' ? ['rgba(244, 67, 54, 0.25)', 'rgba(244, 67, 54, 0.08)'] : 
+                banner.severity === 'success' ? ['rgba(76, 175, 80, 0.25)', 'rgba(76, 175, 80, 0.08)'] : 
+                ['rgba(33, 150, 243, 0.25)', 'rgba(33, 150, 243, 0.08)']
+              }
+            >
+              <View style={{
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                borderLeftWidth: 4,
+                borderLeftColor: banner.severity === 'warning' ? '#FF9800' : 
+                               banner.severity === 'error' ? '#F44336' : 
+                               banner.severity === 'success' ? '#4CAF50' : '#2196F3',
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
               }}>
-                {banner.message}
-              </Text>
-            </View>
+                <Text style={{
+                  color: theme.dark ? '#FFFFFF' : '#000000',
+                  fontSize: 14,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  lineHeight: 20,
+                }}>
+                  {banner.message}
+                </Text>
+              </View>
+            </BannerGlass>
           )}
           
           <Portal>
@@ -487,38 +511,40 @@ export default function GetScheduleV2() {
             </Modal>
           </Portal>
 
-          {/* Date Picker with adjusted styling */}
-          <View style={{ 
-            backgroundColor: theme.colors.primary,
-            marginHorizontal: 20,  // Increased horizontal margin
-            marginVertical: 10,    // Keep vertical margin
-            borderRadius: 8,
-            paddingVertical: 12,   // Reduced vertical padding
-            paddingHorizontal: 16, // Added horizontal padding
-          }}>
+          {/* Date Picker with liquid glass styling */}
+          <SimpleGlass
+            style={{
+              marginHorizontal: 20,
+              marginVertical: 10,
+            }}
+            borderRadius={12}
+            theme={theme}
+          >
             <TouchableOpacity
               onPress={() => setShowPicker(true)}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 15,           // Added gap between icon and text
+                paddingVertical: 14,
+                paddingHorizontal: 20,
+                gap: 15,
               }}
             >
               <Icon 
                 name="calendar" 
-                size={22}          // Slightly smaller icon
-                color={theme.colors.onPrimary} 
+                size={22}
+                color={theme.colors.primary} 
               />
               <Text style={{ 
-                color: theme.colors.onPrimary,
+                color: theme.dark ? '#FFFFFF' : theme.colors.primary,
                 fontSize: 18,
-                fontWeight: '500'
+                fontWeight: '600'
               }}>
                 {formatDate(date)}
               </Text>
             </TouchableOpacity>
-          </View>
+          </SimpleGlass>
 
           {schedule && (
             <View style={{ flex: 1, width: '100%', padding: 10 }}>
@@ -540,7 +566,7 @@ export default function GetScheduleV2() {
               </View>
 
               <ScrollView style={{ width: '100%' }}>
-                {schedule.islandDepartures.map((time, index) => (
+                {schedule.islandDepartures.map((time: any, index: any) => (
                   <View 
                     key={index}
                     style={{
@@ -551,23 +577,45 @@ export default function GetScheduleV2() {
                   >
                     <View style={{ 
                       flex: 1,
-                      paddingHorizontal: 1,
+                      paddingHorizontal: 3,
                     }}>
-                      <View style={styles.timeBox}>
-                        <Text style={styles.timeText}>
-                          {time}
-                        </Text>
-                      </View>
+                      <SimpleGlass
+                        style={styles.timeBox}
+                        borderRadius={8}
+                        theme={theme}
+                      >
+                        <View style={{ 
+                          padding: 12,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          minHeight: 50,
+                        }}>
+                          <Text style={styles.timeText}>
+                            {time}
+                          </Text>
+                        </View>
+                      </SimpleGlass>
                     </View>
                     <View style={{ 
                       flex: 1,
-                      paddingHorizontal: 1,
+                      paddingHorizontal: 3,
                     }}>
-                      <View style={styles.timeBox}>
-                        <Text style={styles.timeText}>
-                          {schedule.mainlandDepartures[index]}
-                        </Text>
-                      </View>
+                      <SimpleGlass
+                        style={styles.timeBox}
+                        borderRadius={8}
+                        theme={theme}
+                      >
+                        <View style={{ 
+                          padding: 12,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          minHeight: 50,
+                        }}>
+                          <Text style={styles.timeText}>
+                            {schedule.mainlandDepartures[index]}
+                          </Text>
+                        </View>
+                      </SimpleGlass>
                     </View>
                   </View>
                 ))}

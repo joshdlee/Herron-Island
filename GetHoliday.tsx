@@ -3,6 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator, RefreshControl } from "react
 import { API, graphqlOperation } from "aws-amplify";
 import { useTheme } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SimpleGlass from './SimpleGlass';
 
 const listDaySchedulesQuery = `
 query MyQuery {
@@ -301,44 +302,44 @@ export default function HolidaySchedules() {
                                     <Text style={{ fontWeight: "bold", marginBottom: 5, color: theme.colors.onBackground }}>
                                         Island Departures
                                     </Text>
-                                    <View
+                                    <SimpleGlass
                                         style={{
                                             flex: 1,
-                                            borderWidth: 1,
-                                            padding: 5,
-                                            borderRadius: 5,
-                                            borderColor: theme.colors.primary,
                                             marginRight: 5,
                                         }}
+                                        borderRadius={8}
+                                        theme={theme}
                                     >
-                                        {schedule.islandDepartures.map((time, i) => (
-                                            <Text key={i} style={{ marginBottom: 5, color: theme.colors.onBackground, textAlign: "center" }}>
-                                                {time}
-                                            </Text>
-                                        ))}
-                                    </View>
+                                        <View style={{ padding: 10 }}>
+                                            {schedule.islandDepartures.map((time: any, i: any) => (
+                                                <Text key={i} style={{ marginBottom: 5, color: theme.colors.onBackground, textAlign: "center", fontSize: 14 }}>
+                                                    {time}
+                                                </Text>
+                                            ))}
+                                        </View>
+                                    </SimpleGlass>
                                 </View>
 
                                 <View style={{ flex: 1, marginLeft: 10 }}>
                                     <Text style={{ fontWeight: "bold", marginBottom: 5, color: theme.colors.onBackground }}>
                                         Mainland Departures
                                     </Text>
-                                    <View
+                                    <SimpleGlass
                                         style={{
                                             flex: 1,
-                                            borderWidth: 1,
-                                            padding: 5,
-                                            borderRadius: 5,
-                                            borderColor: theme.colors.primary,
                                             marginRight: 5,
                                         }}
+                                        borderRadius={8}
+                                        theme={theme}
                                     >
-                                        {schedule.mainlandDepartures.map((time, i) => (
-                                            <Text key={i} style={{ marginBottom: 5, color: theme.colors.onBackground, textAlign: "center" }}>
-                                                {time}
-                                            </Text>
-                                        ))}
-                                    </View>
+                                        <View style={{ padding: 10 }}>
+                                            {schedule.mainlandDepartures.map((time: any, i: any) => (
+                                                <Text key={i} style={{ marginBottom: 5, color: theme.colors.onBackground, textAlign: "center", fontSize: 14 }}>
+                                                    {time}
+                                                </Text>
+                                            ))}
+                                        </View>
+                                    </SimpleGlass>
                                 </View>
                             </View>
                         </View>

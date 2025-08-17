@@ -4,6 +4,7 @@ import { Amplify, API, graphqlOperation } from "aws-amplify";
 import { customListDaySchedules } from "./src/API";
 import { useTheme } from "react-native-paper";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SimpleGlass from './SimpleGlass';
 
 async function fetchSchedule(season, day) {
   Amplify.Logger.LOG_LEVEL = "DEBUG";
@@ -173,23 +174,34 @@ const handleRefresh = async () => {
         </View>
       ) : ( // Otherwise, render your main content
         <>
-          <Text
+          <SimpleGlass
             style={{
-              fontWeight: "bold",
-              color: theme.colors.onBackground,
               marginBottom: 10,
-              textAlign: "center",
+              padding: 12,
+              marginHorizontal: 20,
             }}
+            borderRadius={12}
+            theme={theme}
           >
-            Winter Daily Schedules (October 1 - March 31)
-          </Text>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: theme.colors.onBackground,
+                textAlign: "center",
+                fontSize: 16,
+              }}
+            >
+              Winter Daily Schedules (October 1 - March 31)
+            </Text>
+          </SimpleGlass>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 5, paddingHorizontal: 10 }}>
             <Text
               style={{
                 flex: 1,
                 textAlign: "center",
                 fontWeight: "bold",
                 color: theme.colors.onBackground,
+                fontSize: 14,
               }}
             >
               Island Departures
@@ -200,6 +212,7 @@ const handleRefresh = async () => {
                 textAlign: "center",
                 fontWeight: "bold",
                 color: theme.colors.onBackground,
+                fontSize: 14,
               }}
             >
               Mainland Departures
@@ -210,8 +223,8 @@ const handleRefresh = async () => {
     style={{ flex: 1 }}
     contentContainerStyle={{
         justifyContent: "center",
-        padding: 20,
-        paddingTop: 50,
+        paddingHorizontal: 10,
+        paddingTop: 10,
     }}
     refreshControl={
         <RefreshControl refreshing={refreshing}
@@ -222,18 +235,28 @@ const handleRefresh = async () => {
 >
             {daysOfWeek.map((day) => (
               <View key={day} style={{ alignItems: "center", width: '100%' }}>
-                <Text
+                <SimpleGlass
                   style={{
-                    fontWeight: "bold",
-                    color: theme.colors.onBackground,
-                    marginBottom: 10,
-                    textAlign: "center",
+                    marginBottom: 5,
+                    padding: 6,
+                    marginHorizontal: 10,
                   }}
+                  borderRadius={8}
+                  theme={theme}
                 >
-                  {`${day.charAt(0).toUpperCase() + day.slice(1)}`}
-                </Text>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      color: theme.colors.onBackground,
+                      textAlign: "center",
+                      fontSize: 14,
+                    }}
+                  >
+                    {`${day.charAt(0).toUpperCase() + day.slice(1)}`}
+                  </Text>
+                </SimpleGlass>
                 {schedules[day] &&
-                  schedules[day].islandDepartures.map((time, index) => (
+                  schedules[day].islandDepartures.map((time: any, index: any) => (
                     <View
                       key={index}
                       style={{
@@ -243,44 +266,60 @@ const handleRefresh = async () => {
                         width: '100%',
                       }}
                     >
-                      <View
+                      <SimpleGlass
                         style={{
                           flex: 1,
-                          borderWidth: 1,
-                          padding: 5,
-                          borderRadius: 5,
-                          borderColor: theme.colors.primary,
                           marginRight: 5,
+                          minHeight: 40,
+                          justifyContent: 'center',
+                          alignItems: 'center',
                         }}
+                        borderRadius={8}
+                        theme={theme}
                       >
-                        <Text
-                          style={{
-                            color: theme.colors.onBackground,
-                            textAlign: "center",
-                          }}
-                        >
-                          {time}
-                        </Text>
-                      </View>
-                      <View
+                        <View style={{
+                          padding: 8,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <Text
+                            style={{
+                              color: theme.colors.onBackground,
+                              textAlign: "center",
+                              fontSize: 14,
+                            }}
+                          >
+                            {time}
+                          </Text>
+                        </View>
+                      </SimpleGlass>
+                      <SimpleGlass
                         style={{
                           flex: 1,
-                          borderWidth: 1,
-                          padding: 5,
-                          borderRadius: 5,
-                          borderColor: theme.colors.primary,
                           marginLeft: 5,
+                          minHeight: 40,
+                          justifyContent: 'center',
+                          alignItems: 'center',
                         }}
+                        borderRadius={8}
+                        theme={theme}
                       >
-                        <Text
-                          style={{
-                            color: theme.colors.onBackground,
-                            textAlign: "center",
-                          }}
-                        >
-                          {schedules[day].mainlandDepartures[index]}
-                        </Text>
-                      </View>
+                        <View style={{
+                          padding: 8,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <Text
+                            style={{
+                              color: theme.colors.onBackground,
+                              textAlign: "center",
+                              fontSize: 14,
+                            }}
+                          >
+                            {schedules[day].mainlandDepartures[index]}
+                          </Text>
+                        </View>
+                      </SimpleGlass>
                     </View>
                   ))}
               </View>

@@ -6,6 +6,7 @@ import { customListLowTides } from "./src/API";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity, Linking, TextInput, Platform } from "react-native";
 import { StyleSheet } from "react-native";
+import SimpleGlass from './SimpleGlass';
 
 async function fetchAllLowTides() {
   Amplify.Logger.LOG_LEVEL = "DEBUG";
@@ -236,33 +237,36 @@ useEffect(() => {
                   >
                     Island Departures
                   </Text>
-                  <View
+                  <SimpleGlass
                     style={{
                       flex: 1,
-                      borderWidth: 1,
-                      padding: 5,
-                      borderRadius: 5,
-                      borderColor: theme.colors.primary,
                       marginRight: 5,
+                      minHeight: 60,
                     }}
+                    borderRadius={8}
+                    theme={theme}
                   >
-                    <Text
-                      style={{
-                        marginBottom: 5,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      Cancellations: {tide.cancelIsland.join(", ")}
-                    </Text>
-                    <Text
-                      style={{
-                        marginBottom: 5,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      Reschedules: {tide.rescheduleIsland.join(", ")}
-                    </Text>
-                  </View>
+                    <View style={{ padding: 10 }}>
+                      <Text
+                        style={{
+                          marginBottom: 5,
+                          color: theme.colors.onBackground,
+                          fontSize: 14,
+                        }}
+                      >
+                        Cancellations: {tide.cancelIsland.join(", ")}
+                      </Text>
+                      <Text
+                        style={{
+                          marginBottom: 5,
+                          color: theme.colors.onBackground,
+                          fontSize: 14,
+                        }}
+                      >
+                        Reschedules: {tide.rescheduleIsland.join(", ")}
+                      </Text>
+                    </View>
+                  </SimpleGlass>
                 </View>
 
                 <View style={{ flex: 1, marginLeft: 10 }}>
@@ -275,33 +279,36 @@ useEffect(() => {
                   >
                     Mainland Departures
                   </Text>
-                  <View
+                  <SimpleGlass
                     style={{
                       flex: 1,
-                      borderWidth: 1,
-                      padding: 5,
-                      borderRadius: 5,
-                      borderColor: theme.colors.primary,
                       marginRight: 5,
+                      minHeight: 60,
                     }}
+                    borderRadius={8}
+                    theme={theme}
                   >
-                    <Text
-                      style={{
-                        marginBottom: 5,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      Cancellations: {tide.cancelMainland.join(", ")}
-                    </Text>
-                    <Text
-                      style={{
-                        marginBottom: 5,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      Reschedules: {tide.rescheduleMainland.join(", ")}
-                    </Text>
-                  </View>
+                    <View style={{ padding: 10 }}>
+                      <Text
+                        style={{
+                          marginBottom: 5,
+                          color: theme.colors.onBackground,
+                          fontSize: 14,
+                        }}
+                      >
+                        Cancellations: {tide.cancelMainland.join(", ")}
+                      </Text>
+                      <Text
+                        style={{
+                          marginBottom: 5,
+                          color: theme.colors.onBackground,
+                          fontSize: 14,
+                        }}
+                      >
+                        Reschedules: {tide.rescheduleMainland.join(", ")}
+                      </Text>
+                    </View>
+                  </SimpleGlass>
                 </View>
               </View>
             </View>

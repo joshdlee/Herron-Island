@@ -3,6 +3,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleGlass from './SimpleGlass';
+import BannerGlass from './BannerGlass';
 // import { API_KEY } from '@env';
 
 const API_KEY = '941a855f2988bdb2cef42cfa9e3669d3'
@@ -11,6 +13,55 @@ const LATITUDE = '47.2644';
 const LONGITUDE = '-122.8343';
 const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${LATITUDE}&lon=${LONGITUDE}&units=imperial&appid=${API_KEY}`;
 const FORECAST_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${LATITUDE}&lon=${LONGITUDE}&units=imperial&appid=${API_KEY}`;
+const AURORA_URL = 'https://services.swpc.noaa.gov/json/ovation_aurora_latest.json';
+
+// Calculate bioluminescence probability based on environmental factors
+const getBioluminescenceScore = (temp: number, moonPhase: number, cloudCover: number, month: number) => {
+  // Temperature score (optimal 55-65°F for Noctiluca scintillans in Puget Sound)
+  let tempScore = 0;
+  if (temp >= 55 && temp <= 65) {
+    tempScore = 1.0;
+  } else if (temp >= 50 && temp < 55) {
+    tempScore = 0.7;
+  } else if (temp > 65 && temp <= 70) {
+    tempScore = 0.7;
+  } else if (temp >= 45 && temp < 50) {
+    tempScore = 0.4;
+  } else if (temp > 70 && temp <= 75) {
+    tempScore = 0.4;
+  } else {
+    tempScore = 0.1;
+  }
+  
+  // Darkness score (new moon = 1.0, full moon = 0.3)
+  const darknessScore = moonPhase < 0.25 || moonPhase > 0.75 ? 1.0 : 
+                        moonPhase < 0.35 || moonPhase > 0.65 ? 0.8 :
+                        moonPhase < 0.45 || moonPhase > 0.55 ? 0.5 : 0.3;
+  
+  // Cloud cover helps darkness
+  const cloudScore = cloudCover > 80 ? 1.0 : cloudCover > 60 ? 0.8 : cloudCover > 40 ? 0.6 : 0.4;
+  
+  // Seasonal score (peak July-September)
+  const seasonScore = month >= 7 && month <= 9 ? 1.0 :
+                     month === 6 || month === 10 ? 0.7 :
+                     month === 5 || month === 11 ? 0.4 : 0.2;
+  
+  // Weighted average
+  const totalScore = (tempScore * 0.35 + darknessScore * 0.25 + cloudScore * 0.15 + seasonScore * 0.25) * 100;
+  
+  return {
+    score: Math.round(totalScore),
+    tempScore,
+    darknessScore,
+    seasonScore,
+    factors: {
+      temperature: temp,
+      optimal: temp >= 55 && temp <= 65,
+      darkness: darknessScore > 0.7,
+      season: seasonScore > 0.6
+    }
+  };
+};
 
 const getMoonPhase = (date: Date) => {
   const year = date.getFullYear();
@@ -28,7 +79,10 @@ const getMoonPhase = (date: Date) => {
   // Convert to percentage (0-1)
   const moonPhase = r / 30;
   
-  // Return moon phase description
+  return { phase: moonPhase, description: getMoonPhaseDescription(moonPhase) };
+};
+
+const getMoonPhaseDescription = (moonPhase: number) => {
   if (moonPhase < 0.05 || moonPhase > 0.95) return 'New Moon 🌑';
   if (moonPhase < 0.20) return 'Waxing Crescent 🌒';
   if (moonPhase < 0.30) return 'First Quarter 🌓';
@@ -45,18 +99,45 @@ const Weather = () => {
   const [forecastData, setForecastData] = useState([]);
   const [error, setError] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [auroraChance, setAuroraChance] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchWeatherData = async () => {
         try {
-          const [currentResponse, forecastResponse] = await Promise.all([
+          const [currentResponse, forecastResponse, auroraResponse] = await Promise.all([
             fetch(API_URL),
-            fetch(FORECAST_URL)
+            fetch(FORECAST_URL),
+            fetch(AURORA_URL)
           ]);
 
           const currentData = await currentResponse.json();
           const forecast = await forecastResponse.json();
+          const auroraData = await auroraResponse.json();
+          
+          // Find aurora probability for Herron Island location
+          if (auroraData && auroraData.coordinates) {
+            // Convert our longitude to 0-360 range (NOAA uses 0-360)
+            const normLon = parseFloat(LONGITUDE) < 0 ? 360 + parseFloat(LONGITUDE) : parseFloat(LONGITUDE);
+            const lat = parseFloat(LATITUDE);
+            
+            // Find the closest grid point
+            let closestProb = 0;
+            let minDistance = Infinity;
+            
+            for (const coord of auroraData.coordinates) {
+              const [gridLon, gridLat, prob] = coord;
+              const distance = Math.sqrt(
+                Math.pow(gridLon - normLon, 2) + Math.pow(gridLat - lat, 2)
+              );
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestProb = prob;
+              }
+            }
+            
+            setAuroraChance(closestProb);
+          }
 
           // Check for alerts in the API response
           if (forecast.alerts) {
@@ -92,7 +173,7 @@ const Weather = () => {
 
   if (!weatherData) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
@@ -107,18 +188,55 @@ const Weather = () => {
   }
 
   const nowTemp = weatherData?.main?.temp ? Math.round(weatherData.main.temp) : 'N/A';
+  const feelsLike = weatherData?.main?.feels_like ? Math.round(weatherData.main.feels_like) : 'N/A';
+  const humidity = weatherData?.main?.humidity ?? 'N/A';
+  const windSpeed = weatherData?.wind?.speed ? Math.round(weatherData.wind.speed) : 'N/A';
+  const windGust = weatherData?.wind?.gust ? Math.round(weatherData.wind.gust) : null;
+  const windDeg = weatherData?.wind?.deg;
+  const pressure = weatherData?.main?.pressure ?? 'N/A';
+  const visibility = weatherData?.visibility ? Math.round(weatherData.visibility / 1609.34) : 'N/A'; // Convert meters to miles
+  const cloudCover = weatherData?.clouds?.all ?? 'N/A';
+  
+  // Convert wind degrees to compass direction
+  const getWindDirection = (degrees) => {
+    if (degrees === undefined || degrees === null) return '';
+    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    const index = Math.round(degrees / 22.5) % 16;
+    return directions[index];
+  };
+  
+  const windDirection = getWindDirection(windDeg);
+  
+  // Estimate sea conditions based on wind (for protected Puget Sound waters)
+  const getSeaConditions = (windSpeed, windGust) => {
+    const maxWind = windGust || windSpeed;
+    if (maxWind <= 5) return { text: 'Calm', color: '#4CAF50' };
+    if (maxWind <= 10) return { text: 'Light Chop', color: '#4CAF50' };
+    if (maxWind <= 15) return { text: 'Moderate', color: '#FFC107' };
+    if (maxWind <= 20) return { text: 'Choppy', color: '#FF9800' };
+    if (maxWind <= 25) return { text: 'Rough', color: '#FF5722' };
+    return { text: 'Very Rough', color: '#F44336' };
+  };
+  
+  const seaConditions = getSeaConditions(windSpeed, windGust);
   const nowWeather = weatherData?.weather?.[0]?.description ?? 'Unknown';
   const nowIcon = weatherData?.weather?.[0]?.icon 
     ? `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`
     : null;
   const sunriseTime = weatherData?.sys?.sunrise 
-    ? new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()
+    ? new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
     : 'N/A';
   const sunsetTime = weatherData?.sys?.sunset
-    ? new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()
+    ? new Date(weatherData.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
     : 'N/A';
 
-  const moonPhaseInfo = getMoonPhase(new Date());
+  const moonPhaseData = getMoonPhase(new Date());
+  const moonPhaseInfo = moonPhaseData.description;
+  
+  // Calculate bioluminescence probability
+  const waterTemp = typeof nowTemp === 'number' ? nowTemp : 60; // Using air temp as proxy, default to 60 if N/A
+  const currentMonth = new Date().getMonth() + 1;
+  const bioScore = getBioluminescenceScore(waterTemp, moonPhaseData.phase, typeof cloudCover === 'number' ? cloudCover : 50, currentMonth);
 
   const styles = (theme) => StyleSheet.create({
     container: {
@@ -129,24 +247,14 @@ const Weather = () => {
       padding: 16,
     },
     header: {
-      fontSize: 32,
+      fontSize: 24,
       fontWeight: 'bold',
-      color: theme.colors.primary,
+      color: theme.colors.onBackground,
       textAlign: 'center',
-      marginBottom: 24,
+      marginBottom: 8,
     },
     weatherCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: 5,
-      padding: 20,
       marginBottom: 16,
-      borderColor: theme.colors.primary,
-      borderWidth: 1,
-      shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
     currentWeather: {
       alignItems: 'center',
@@ -174,17 +282,7 @@ const Weather = () => {
       textAlign: 'center',
     },
     sunTimesCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: 5,
-      padding: 20,
       marginBottom: 16,
-      borderColor: theme.colors.primary,
-      borderWidth: 1,
-      shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
     sunTimeRow: {
       flexDirection: 'row',
@@ -198,17 +296,7 @@ const Weather = () => {
       textAlign: 'center',
     },
     forecastCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: 5,
-      padding: 20,
       marginBottom: 16,
-      borderColor: theme.colors.primary,
-      borderWidth: 1,
-      shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
     forecastTitle: {
       fontSize: 20,
@@ -282,60 +370,308 @@ const Weather = () => {
         {alerts.length > 0 && (
           <View style={styles(theme).alertsContainer}>
             {alerts.map((alert, index) => (
-              <View key={index} style={styles(theme).alertCard}>
-                <MaterialCommunityIcons name="alert" size={24} color="#fff" />
-                <View style={styles(theme).alertContent}>
-                  <Text style={styles(theme).alertTitle}>{alert.event}</Text>
-                  <Text style={styles(theme).alertDescription}>{alert.description}</Text>
+              <BannerGlass
+                key={index}
+                style={{ marginBottom: 8 }}
+                borderRadius={12}
+                glassColor={'rgba(244, 67, 54, 0.12)'}
+                gradientColors={['rgba(244, 67, 54, 0.25)', 'rgba(244, 67, 54, 0.08)']}
+              >
+                <View style={[styles(theme).alertCard, { backgroundColor: 'transparent', borderWidth: 0, elevation: 0, shadowOpacity: 0 }]}>
+                  <MaterialCommunityIcons name="alert" size={24} color={theme.colors.error} />
+                  <View style={styles(theme).alertContent}>
+                    <Text style={[styles(theme).alertTitle, { color: theme.colors.error }]}>{alert.event}</Text>
+                    <Text style={[styles(theme).alertDescription, { color: theme.colors.onBackground }]}>{alert.description}</Text>
+                  </View>
                 </View>
-              </View>
+              </BannerGlass>
             ))}
           </View>
         )}
                 
-        <View style={styles(theme).weatherCard}>
-          <View style={styles(theme).currentWeather}>
+        {/* PRIORITY 1: Sea Conditions for Ferry */}
+        <SimpleGlass
+          style={{ marginBottom: 16 }}
+          borderRadius={12}
+          theme={theme}
+        >
+          <View style={{ padding: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}>
+              <MaterialCommunityIcons name="waves" size={28} color={seaConditions.color} />
+              <Text style={{ 
+                marginLeft: 10,
+                fontSize: 22, 
+                fontWeight: 'bold',
+                color: seaConditions.color
+              }}>
+                Sea Conditions: {seaConditions.text}
+              </Text>
+            </View>
+            
+            <View style={{ 
+              flexDirection: 'row', 
+              justifyContent: 'space-around',
+              paddingTop: 10,
+              borderTopWidth: 1,
+              borderTopColor: theme.colors.outline,
+              opacity: 0.8
+            }}>
+              <View style={{ alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 12, height: 12, backgroundColor: '#4CAF50', borderRadius: 6, marginRight: 5 }} />
+                  <Text style={{ color: theme.colors.onBackground, fontSize: 12 }}>Calm - Light</Text>
+                </View>
+              </View>
+              <View style={{ alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 12, height: 12, backgroundColor: '#FFC107', borderRadius: 6, marginRight: 5 }} />
+                  <Text style={{ color: theme.colors.onBackground, fontSize: 12 }}>Moderate</Text>
+                </View>
+              </View>
+              <View style={{ alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 12, height: 12, backgroundColor: '#FF5722', borderRadius: 6, marginRight: 5 }} />
+                  <Text style={{ color: theme.colors.onBackground, fontSize: 12 }}>Rough</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </SimpleGlass>
+
+        {/* PRIORITY 2: Current Weather & Wind (for ferry/boating) */}
+        <SimpleGlass
+          style={styles(theme).weatherCard}
+          borderRadius={16}
+          theme={theme}
+        >
+          <View style={[styles(theme).currentWeather, { padding: 20 }]}>
             <Text style={styles(theme).temperature}>{nowTemp}°F</Text>
             <View style={styles(theme).weatherDetails}>
               {nowIcon && <Image source={{ uri: nowIcon }} style={styles(theme).weatherIcon} />}
               <Text style={styles(theme).description}>{nowWeather}</Text>
             </View>
           </View>
-        </View>
+        </SimpleGlass>
 
-        <View style={styles(theme).sunTimesCard}>
-          <View style={styles(theme).sunTimeRow}>
-            <MaterialCommunityIcons name="weather-sunset-up" size={24} color={theme.colors.primary} />
-            <Text style={styles(theme).sunTimeText}>Sunrise: {sunriseTime}</Text>
-          </View>
-          <View style={styles(theme).sunTimeRow}>
-            <MaterialCommunityIcons name="weather-sunset-down" size={24} color={theme.colors.primary} />
-            <Text style={styles(theme).sunTimeText}>Sunset: {sunsetTime}</Text>
-          </View>
-          <View style={styles(theme).sunTimeRow}>
-            <MaterialCommunityIcons name="moon-waxing-crescent" size={24} color={theme.colors.primary} />
-            <Text style={styles(theme).sunTimeText}>Moon Phase: {moonPhaseInfo}</Text>
-          </View>
-        </View>
-
-        <View style={styles(theme).forecastCard}>
-          <Text style={styles(theme).forecastTitle}>3-Day Forecast</Text>
-          <View style={styles(theme).forecastContainer}>
-            {forecastData.map((day, index) => (
-              <View key={index} style={styles(theme).forecastDay}>
-                <Text style={styles(theme).forecastDate}>
-                  {day.date.toLocaleDateString('en-US', { weekday: 'long' })}
+        {/* PRIORITY 3: Wind & Visibility (critical for boating/ferry) */}
+        <View style={{ flexDirection: 'row', marginBottom: 16, gap: 8 }}>
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="weather-windy" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Wind</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 18 }}>
+                {windDirection} {windSpeed} mph
+              </Text>
+              {windGust && (
+                <Text style={{ color: theme.colors.error, fontSize: 11 }}>
+                  Gusts: {windGust} mph
                 </Text>
-                <Image 
-                  source={{ uri: day.icon }} 
-                  style={styles(theme).forecastIcon} 
+              )}
+            </View>
+          </SimpleGlass>
+          
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="eye" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Visibility</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 16 }}>{visibility} mi</Text>
+            </View>
+          </SimpleGlass>
+          
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="thermometer" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Feels Like</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 18 }}>{feelsLike}°F</Text>
+            </View>
+          </SimpleGlass>
+        </View>
+
+        {/* PRIORITY 4: 3-Day Forecast (planning ferry trips) */}
+        <SimpleGlass
+          style={styles(theme).forecastCard}
+          borderRadius={12}
+          theme={theme}
+        >
+          <View style={{ padding: 20 }}>
+            <Text style={styles(theme).forecastTitle}>3-Day Forecast</Text>
+            <View style={styles(theme).forecastContainer}>
+              {forecastData.map((day, index) => (
+                <View key={index} style={[styles(theme).forecastDay, { flex: 1 }]}>
+                  <Text style={styles(theme).forecastDate}>
+                    {day.date.toLocaleDateString('en-US', { weekday: 'short' })}
+                  </Text>
+                  <Image 
+                    source={{ uri: day.icon }} 
+                    style={styles(theme).forecastIcon} 
+                  />
+                  <Text style={styles(theme).forecastTemp}>
+                    {day.highTemp}° / {day.lowTemp}°
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </SimpleGlass>
+
+        {/* PRIORITY 5: Sun times (outdoor activities) */}
+        <View style={{ flexDirection: 'row', marginBottom: 16, gap: 8 }}>
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="weather-sunset-up" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Sunrise</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 16 }}>{sunriseTime}</Text>
+            </View>
+          </SimpleGlass>
+          
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="weather-sunset-down" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Sunset</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 16 }}>{sunsetTime}</Text>
+            </View>
+          </SimpleGlass>
+        </View>
+
+        {/* PRIORITY 6: Special island features */}
+        <SimpleGlass
+          style={{ marginBottom: 16 }}
+          borderRadius={12}
+          theme={theme}
+        >
+          <View style={{ padding: 15 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+              <MaterialCommunityIcons 
+                name="shimmer" 
+                size={24} 
+                color={bioScore.score > 70 ? '#00E5FF' : bioScore.score > 50 ? '#40C4FF' : bioScore.score > 30 ? '#82B1FF' : theme.colors.primary} 
+              />
+              <Text style={{ 
+                marginLeft: 8,
+                fontSize: 16, 
+                fontWeight: 'bold',
+                color: theme.colors.onBackground 
+              }}>
+                Bioluminescence: {bioScore.score > 70 ? 'High' : bioScore.score > 50 ? 'Moderate' : bioScore.score > 30 ? 'Low' : 'Very Low'}
+                {bioScore.score > 70 ? ' ✨' : ''}
+              </Text>
+            </View>
+            <Text style={{ 
+              fontSize: 13, 
+              color: theme.colors.onBackground, 
+              opacity: 0.7,
+              fontStyle: 'italic',
+              textAlign: 'center'
+            }}>
+              {bioScore.factors.optimal && bioScore.factors.darkness && bioScore.factors.season ? 
+                'Excellent conditions for viewing tonight' :
+                bioScore.factors.optimal && bioScore.factors.darkness ? 
+                'Good darkness & water temperature' :
+                bioScore.factors.season ? 
+                `Peak season conditions (${bioScore.score}% likelihood)` :
+                `Environmental score: ${bioScore.score}%`
+              }
+            </Text>
+          </View>
+        </SimpleGlass>
+
+        {/* PRIORITY 7: Secondary weather details */}
+        <View style={{ flexDirection: 'row', marginBottom: 16, gap: 8 }}>
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="water-percent" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Humidity</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 18 }}>{humidity}%</Text>
+            </View>
+          </SimpleGlass>
+          
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="gauge" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Pressure</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 16 }}>{pressure} mb</Text>
+            </View>
+          </SimpleGlass>
+          
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="weather-cloudy" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Cloud Cover</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 16 }}>{cloudCover}%</Text>
+            </View>
+          </SimpleGlass>
+        </View>
+
+        {/* PRIORITY 8: Nice-to-have celestial info */}
+        <View style={{ flexDirection: 'row', marginBottom: 16, gap: 8 }}>
+          <SimpleGlass
+            style={{ flex: 1 }}
+            borderRadius={10}
+            theme={theme}
+          >
+            <View style={{ padding: 15, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="moon-waxing-crescent" size={24} color={theme.colors.primary} />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Moon Phase</Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 14, textAlign: 'center' }}>{moonPhaseInfo}</Text>
+            </View>
+          </SimpleGlass>
+          
+          {auroraChance !== null && (
+            <SimpleGlass
+              style={{ flex: 1 }}
+              borderRadius={10}
+              theme={theme}
+            >
+              <View style={{ padding: 15, alignItems: 'center' }}>
+                <MaterialCommunityIcons 
+                  name="weather-night" 
+                  size={24} 
+                  color={auroraChance > 10 ? '#4CAF50' : auroraChance > 5 ? '#FFC107' : theme.colors.primary} 
                 />
-                <Text style={styles(theme).forecastTemp}>
-                  {day.highTemp}° / {day.lowTemp}°
+                <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Aurora</Text>
+                <Text style={{ 
+                  color: auroraChance > 10 ? '#4CAF50' : auroraChance > 5 ? '#FFC107' : theme.colors.onBackground, 
+                  fontWeight: 'bold', 
+                  fontSize: 16 
+                }}>
+                  {auroraChance.toFixed(1)}%
                 </Text>
+                {auroraChance > 10 && <Text style={{ fontSize: 12 }}>🌟</Text>}
               </View>
-            ))}
-          </View>
+            </SimpleGlass>
+          )}
         </View>
       </ScrollView>
     </View>
