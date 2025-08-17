@@ -6,7 +6,7 @@
     "version": "2.2.7",
     "orientation": "portrait",
     "newArchEnabled": true,
-    "icon": "./AppStore.png",
+    "icon": "./appstore.png",
     "splash": {
       "image": "./assets/Herron-Island-Teal.png",
       "resizeMode": "contain",
