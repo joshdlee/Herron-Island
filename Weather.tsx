@@ -14,6 +14,7 @@ const LONGITUDE = '-122.8343';
 const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${LATITUDE}&lon=${LONGITUDE}&units=imperial&appid=${API_KEY}`;
 const FORECAST_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${LATITUDE}&lon=${LONGITUDE}&units=imperial&appid=${API_KEY}`;
 const AURORA_URL = 'https://services.swpc.noaa.gov/json/ovation_aurora_latest.json';
+const BUOY_URL = 'https://www.ndbc.noaa.gov/data/realtime2/46121.txt';
 
 // Calculate bioluminescence probability based on environmental factors
 const getBioluminescenceScore = (temp: number, moonPhase: number, cloudCover: number, month: number) => {
@@ -41,10 +42,14 @@ const getBioluminescenceScore = (temp: number, moonPhase: number, cloudCover: nu
   // Cloud cover helps darkness
   const cloudScore = cloudCover > 80 ? 1.0 : cloudCover > 60 ? 0.8 : cloudCover > 40 ? 0.6 : 0.4;
   
-  // Seasonal score (peak July-September)
-  const seasonScore = month >= 7 && month <= 9 ? 1.0 :
-                     month === 6 || month === 10 ? 0.7 :
-                     month === 5 || month === 11 ? 0.4 : 0.2;
+  // Seasonal score (based on Herron Island observations)
+  const seasonScore = month === 7 || month === 8 ? 1.0 :      // Excellent (Jul-Aug)
+                     month === 9 ? 0.8 :                      // Good (Sep) 
+                     month === 6 ? 0.7 :                      // Good (Jun)
+                     month === 5 || month === 10 ? 0.3 :      // Occasional (May, Oct)
+                     month === 4 ? 0.2 :                      // Uncommon (Apr)
+                     month === 3 || month === 11 ? 0.15 :     // Rare (Mar, Nov)
+                     0.05;                                     // Very rare (Dec-Feb)
   
   // Weighted average
   const totalScore = (tempScore * 0.35 + darknessScore * 0.25 + cloudScore * 0.15 + seasonScore * 0.25) * 100;
@@ -100,20 +105,23 @@ const Weather = () => {
   const [error, setError] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [auroraChance, setAuroraChance] = useState(null);
+  const [buoyData, setBuoyData] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchWeatherData = async () => {
         try {
-          const [currentResponse, forecastResponse, auroraResponse] = await Promise.all([
+          const [currentResponse, forecastResponse, auroraResponse, buoyResponse] = await Promise.all([
             fetch(API_URL),
             fetch(FORECAST_URL),
-            fetch(AURORA_URL)
+            fetch(AURORA_URL),
+            fetch(BUOY_URL)
           ]);
 
           const currentData = await currentResponse.json();
           const forecast = await forecastResponse.json();
           const auroraData = await auroraResponse.json();
+          const buoyText = await buoyResponse.text();
           
           // Find aurora probability for Herron Island location
           if (auroraData && auroraData.coordinates) {
@@ -137,6 +145,26 @@ const Weather = () => {
             }
             
             setAuroraChance(closestProb);
+          }
+          
+          // Parse buoy data (NDBC format)
+          const buoyLines = buoyText.split('\n');
+          if (buoyLines.length > 2) {
+            // Skip header lines, get most recent data
+            const dataLine = buoyLines[2].split(/\s+/);
+            console.log('Buoy data line:', dataLine);
+            if (dataLine.length >= 9) {
+              const parsedBuoyData = {
+                waveHeight: parseFloat(dataLine[8]) || null, // WVHT (m)
+                wavePeriod: parseFloat(dataLine[9]) || null, // DPD (sec)
+                windSpeed: parseFloat(dataLine[6]) || null, // WSPD (m/s)
+                windDirection: parseFloat(dataLine[5]) || null, // WDIR (deg)
+                // Note: Water temp not reliably available from this buoy
+                timestamp: `${dataLine[0]}-${dataLine[1]}-${dataLine[2]} ${dataLine[3]}:${dataLine[4]}`
+              };
+              console.log('Parsed buoy data:', parsedBuoyData);
+              setBuoyData(parsedBuoyData);
+            }
           }
 
           // Check for alerts in the API response
@@ -207,18 +235,29 @@ const Weather = () => {
   
   const windDirection = getWindDirection(windDeg);
   
-  // Estimate sea conditions based on wind (for protected Puget Sound waters)
-  const getSeaConditions = (windSpeed, windGust) => {
-    const maxWind = windGust || windSpeed;
-    if (maxWind <= 5) return { text: 'Calm', color: '#4CAF50' };
-    if (maxWind <= 10) return { text: 'Light Chop', color: '#4CAF50' };
-    if (maxWind <= 15) return { text: 'Moderate', color: '#FFC107' };
-    if (maxWind <= 20) return { text: 'Choppy', color: '#FF9800' };
-    if (maxWind <= 25) return { text: 'Rough', color: '#FF5722' };
-    return { text: 'Very Rough', color: '#F44336' };
+  // Get sea conditions from NOAA buoy data (Station 46121 - Carr Inlet)
+  const getSeaConditions = (buoyData, fallbackWindSpeed, fallbackWindGust) => {
+    if (buoyData && buoyData.waveHeight !== null) {
+      const waveHeightFt = buoyData.waveHeight * 3.28084; // Convert meters to feet
+      if (waveHeightFt <= 1) return { text: 'Calm', color: '#4CAF50', source: 'buoy', wave: waveHeightFt };
+      if (waveHeightFt <= 2) return { text: 'Light Chop', color: '#4CAF50', source: 'buoy', wave: waveHeightFt };
+      if (waveHeightFt <= 3) return { text: 'Moderate', color: '#FFC107', source: 'buoy', wave: waveHeightFt };
+      if (waveHeightFt <= 4) return { text: 'Choppy', color: '#FF9800', source: 'buoy', wave: waveHeightFt };
+      if (waveHeightFt <= 6) return { text: 'Rough', color: '#FF5722', source: 'buoy', wave: waveHeightFt };
+      return { text: 'Very Rough', color: '#F44336', source: 'buoy', wave: waveHeightFt };
+    }
+    
+    // Fallback to wind estimation if buoy data unavailable
+    const maxWind = fallbackWindGust || fallbackWindSpeed;
+    if (maxWind <= 5) return { text: 'Calm', color: '#4CAF50', source: 'wind' };
+    if (maxWind <= 10) return { text: 'Light Chop', color: '#4CAF50', source: 'wind' };
+    if (maxWind <= 15) return { text: 'Moderate', color: '#FFC107', source: 'wind' };
+    if (maxWind <= 20) return { text: 'Choppy', color: '#FF9800', source: 'wind' };
+    if (maxWind <= 25) return { text: 'Rough', color: '#FF5722', source: 'wind' };
+    return { text: 'Very Rough', color: '#F44336', source: 'wind' };
   };
   
-  const seaConditions = getSeaConditions(windSpeed, windGust);
+  const seaConditions = getSeaConditions(buoyData, windSpeed, windGust);
   const nowWeather = weatherData?.weather?.[0]?.description ?? 'Unknown';
   const nowIcon = weatherData?.weather?.[0]?.icon 
     ? `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`
@@ -234,7 +273,9 @@ const Weather = () => {
   const moonPhaseInfo = moonPhaseData.description;
   
   // Calculate bioluminescence probability
-  const waterTemp = typeof nowTemp === 'number' ? nowTemp : 60; // Using air temp as proxy, default to 60 if N/A
+  // Use actual water temperature from buoy if available, otherwise estimate from air temp (water typically 5° cooler)
+  const estimatedWaterTemp = typeof nowTemp === 'number' ? nowTemp - 5 : 60;
+  const waterTemp = buoyData?.waterTemp ? (buoyData.waterTemp * 9/5 + 32) : estimatedWaterTemp;
   const currentMonth = new Date().getMonth() + 1;
   const bioScore = getBioluminescenceScore(waterTemp, moonPhaseData.phase, typeof cloudCover === 'number' ? cloudCover : 50, currentMonth);
 
@@ -408,6 +449,39 @@ const Weather = () => {
               </Text>
             </View>
             
+            {seaConditions.source === 'buoy' && seaConditions.wave && (
+              <View style={{ alignItems: 'center', marginBottom: 10 }}>
+                <Text style={{ 
+                  color: theme.colors.onBackground, 
+                  fontSize: 16,
+                  fontWeight: '500'
+                }}>
+                  Wave Height: {seaConditions.wave.toFixed(1)} ft
+                </Text>
+                <Text style={{ 
+                  color: theme.colors.onBackground, 
+                  fontSize: 12,
+                  opacity: 0.7,
+                  fontStyle: 'italic'
+                }}>
+                  NOAA Buoy 46121 (Carr Inlet)
+                </Text>
+              </View>
+            )}
+            
+            {buoyData && buoyData.wavePeriod && (
+              <View style={{ alignItems: 'center', marginBottom: 10 }}>
+                <Text style={{ 
+                  color: theme.colors.onBackground, 
+                  fontSize: 14,
+                  opacity: 0.8
+                }}>
+                  Wave Period: {buoyData.wavePeriod.toFixed(0)}s
+                  {buoyData.waterTemp && ` • Water Temp: ${(buoyData.waterTemp * 9/5 + 32).toFixed(0)}°F`}
+                </Text>
+              </View>
+            )}
+            
             <View style={{ 
               flexDirection: 'row', 
               justifyContent: 'space-around',
@@ -453,6 +527,7 @@ const Weather = () => {
           </View>
         </SimpleGlass>
 
+
         {/* PRIORITY 3: Wind & Visibility (critical for boating/ferry) */}
         <View style={{ flexDirection: 'row', marginBottom: 16, gap: 8 }}>
           <SimpleGlass
@@ -461,11 +536,25 @@ const Weather = () => {
             theme={theme}
           >
             <View style={{ padding: 15, alignItems: 'center' }}>
-              <MaterialCommunityIcons name="weather-windy" size={24} color={theme.colors.primary} />
-              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>Wind</Text>
-              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 18 }}>
-                {windDirection} {windSpeed} mph
+              <MaterialCommunityIcons 
+                name={buoyData?.windSpeed ? "waves" : "weather-windy"} 
+                size={24} 
+                color={theme.colors.primary} 
+              />
+              <Text style={{ color: theme.colors.onBackground, marginTop: 4, fontSize: 12 }}>
+                {buoyData?.windSpeed ? 'Marine Wind' : 'Wind'}
               </Text>
+              <Text style={{ color: theme.colors.onBackground, fontWeight: 'bold', fontSize: 18 }}>
+                {buoyData?.windSpeed ? 
+                  `${(buoyData.windSpeed * 2.237).toFixed(0)} mph` :
+                  `${windDirection} ${windSpeed} mph`
+                }
+              </Text>
+              {buoyData?.windDirection && (
+                <Text style={{ color: theme.colors.onBackground, fontSize: 11, opacity: 0.7 }}>
+                  {getWindDirection(buoyData.windDirection)}
+                </Text>
+              )}
               {windGust && (
                 <Text style={{ color: theme.colors.error, fontSize: 11 }}>
                   Gusts: {windGust} mph
@@ -572,26 +661,10 @@ const Weather = () => {
                 fontWeight: 'bold',
                 color: theme.colors.onBackground 
               }}>
-                Bioluminescence: {bioScore.score > 70 ? 'High' : bioScore.score > 50 ? 'Moderate' : bioScore.score > 30 ? 'Low' : 'Very Low'}
-                {bioScore.score > 70 ? ' ✨' : ''}
+                Bioluminescence: {bioScore.score >= 90 ? 'Excellent' : bioScore.score >= 70 ? 'Good' : bioScore.score >= 60 ? 'Fair' : 'Poor'}
+                {bioScore.score >= 90 ? ' ✨' : bioScore.score >= 70 ? ' ✨' : ''}
               </Text>
             </View>
-            <Text style={{ 
-              fontSize: 13, 
-              color: theme.colors.onBackground, 
-              opacity: 0.7,
-              fontStyle: 'italic',
-              textAlign: 'center'
-            }}>
-              {bioScore.factors.optimal && bioScore.factors.darkness && bioScore.factors.season ? 
-                'Excellent conditions for viewing tonight' :
-                bioScore.factors.optimal && bioScore.factors.darkness ? 
-                'Good darkness & water temperature' :
-                bioScore.factors.season ? 
-                `Peak season conditions (${bioScore.score}% likelihood)` :
-                `Environmental score: ${bioScore.score}%`
-              }
-            </Text>
           </View>
         </SimpleGlass>
 
